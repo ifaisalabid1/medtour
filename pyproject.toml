@@ -1,0 +1,53 @@
+[project]
+name = "medtour"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "django-environ>=0.14.0",
+    "django[argon2]>=6.1.1",
+    "psycopg[binary,pool]>=3.3.6",
+]
+
+[dependency-groups]
+dev = [
+    "django-debug-toolbar>=8.0.0",
+    "pre-commit>=4.6.2",
+    "pytest>=9.1.1",
+    "pytest-django>=4.14.0",
+    "ruff>=0.16.10",
+]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 88
+extend-exclude = ["**/migrations/**"]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "W",   # pycodestyle
+    "F",   # pyflakes
+    "I",   # import sorting
+    "B",   # bugbear
+    "UP",  # pyupgrade
+    "DJ",  # Django-specific checks
+    "S",   # bandit security checks
+    "SIM", # simplifications
+    "C4",  # comprehensions
+    "PTH", # prefer pathlib
+    "RUF", # ruff-specific
+]
+ignore = [
+    "E501",   # line length is handled by the formatter
+    "RUF012", # false positives on Django Meta/ModelAdmin class attributes
+]
+
+[tool.ruff.lint.per-file-ignores]
+"config/settings/*.py" = ["F403", "F405"] # star imports between settings files
+"**/tests/**" = ["S101", "S105", "S106"]  # asserts and dummy passwords in tests
+
+[tool.pytest]
+minversion = "9.0"
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+python_files = ["test_*.py", "tests.py"]
+addopts = ["-ra", "--strict-markers", "--strict-config", "--reuse-db"]
