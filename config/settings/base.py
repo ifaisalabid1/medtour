@@ -26,6 +26,9 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # --- Applications ------------------------------------------------------------
 
+UNFOLD_APPS = [
+    "unfold",  # must come before django.contrib.admin
+]
 DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -35,9 +38,12 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 THIRD_PARTY_APPS: list[str] = []
-LOCAL_APPS: list[str] = []
+LOCAL_APPS = [
+    "apps.core",
+    "apps.accounts",
+]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS = UNFOLD_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -78,6 +84,8 @@ DATABASES = {
         "OPTIONS": {"pool": True},
     }
 }
+
+AUTH_USER_MODEL = "accounts.User"
 
 # --- Authentication ----------------------------------------------------------
 
@@ -130,4 +138,13 @@ LOGGING = {
         "console": {"class": "logging.StreamHandler", "formatter": "default"},
     },
     "root": {"handlers": ["console"], "level": "INFO"},
+}
+
+# --- Admin (Unfold) ----------------------------------------------------------
+
+UNFOLD = {
+    "SITE_TITLE": "Medtour Admin",
+    "SITE_HEADER": "Medtour",
+    "SITE_SYMBOL": "health_and_safety",  # Material Symbols icon name
+    "ENVIRONMENT": "apps.core.admin_config.environment_callback",
 }

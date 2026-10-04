@@ -4,6 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.14"
 dependencies = [
     "django-environ>=0.14.0",
+    "django-unfold>=0.108.0",
     "django[argon2]>=6.1.1",
     "psycopg[binary,pool]>=3.3.6",
 ]
