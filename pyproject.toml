@@ -52,3 +52,11 @@ minversion = "9.0"
 DJANGO_SETTINGS_MODULE = "config.settings.test"
 python_files = ["test_*.py", "tests.py"]
 addopts = ["-ra", "--strict-markers", "--strict-config", "--reuse-db"]
+filterwarnings = [
+    # Fail the tests if our own code uses a deprecated Django API.
+    'error::DeprecationWarning:apps\.',
+    'error::PendingDeprecationWarning:apps\.',
+    # Unfold 0.108 overrides get_action_choices() with the pre-Django 6.1
+    # signature. Remove this line once an Unfold release fixes it.
+    'ignore:Overriding get_action_choices:PendingDeprecationWarning:unfold\.admin',
+]
