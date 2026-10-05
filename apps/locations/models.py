@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
 from apps.core.models import SLUG_HELP_TEXT, PublishableModel, TimeStampedModel
+from apps.core.rich_text import RichTextField
 
 # India's 28 states and 8 union territories. Stored exactly as displayed.
 INDIAN_STATES_AND_UTS = (
@@ -93,8 +94,8 @@ class SourceCountry(TimeStampedModel, PublishableModel):
         blank=True,
         help_text=_("Leave blank to generate it from the country name."),
     )
-    intro = models.TextField(_("introduction"), blank=True)
-    visa_info = models.TextField(_("visa information"), blank=True)
+    intro = RichTextField(_("introduction"), blank=True)
+    visa_info = RichTextField(_("visa information"), blank=True)
 
     class Meta:
         verbose_name = _("source country")

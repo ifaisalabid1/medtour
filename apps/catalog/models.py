@@ -12,6 +12,7 @@ from apps.core.models import (
     PublishableModel,
     TimeStampedModel,
 )
+from apps.core.rich_text import RichTextField
 from apps.core.search import weighted_search_vector
 
 
@@ -30,7 +31,7 @@ class Speciality(TimeStampedModel, PublishableModel):
     summary = models.CharField(
         _("summary"), max_length=300, blank=True, help_text=SUMMARY_HELP_TEXT
     )
-    description = models.TextField(_("description"), blank=True)
+    description = RichTextField(_("description"), blank=True)
     display_order = models.PositiveSmallIntegerField(
         _("display order"), default=0, help_text=_("Lower numbers appear first.")
     )
@@ -73,7 +74,7 @@ class Treatment(TimeStampedModel, PublishableModel):
     summary = models.CharField(
         _("summary"), max_length=300, blank=True, help_text=SUMMARY_HELP_TEXT
     )
-    description = models.TextField(_("description"), blank=True)
+    description = RichTextField(_("description"), blank=True)
     hospital_stay_days = models.PositiveSmallIntegerField(
         _("hospital stay (days)"),
         null=True,
@@ -134,7 +135,7 @@ class Condition(TimeStampedModel, PublishableModel):
     summary = models.CharField(
         _("summary"), max_length=300, blank=True, help_text=SUMMARY_HELP_TEXT
     )
-    description = models.TextField(_("description"), blank=True)
+    description = RichTextField(_("description"), blank=True)
     treatments = models.ManyToManyField(
         Treatment,
         verbose_name=_("treatments"),

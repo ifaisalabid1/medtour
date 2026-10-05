@@ -5,6 +5,7 @@ requires-python = ">=3.14"
 dependencies = [
     "django-countries>=9.1.0",
     "django-environ>=0.14.0",
+    "django-prose-editor[sanitize]>=0.27.3",
     "django-unfold>=0.108.0",
     "django[argon2]>=6.1.1",
     "pillow>=12.3.0",
@@ -55,6 +56,10 @@ ignore = [
 minversion = "9.0"
 DJANGO_SETTINGS_MODULE = "config.settings.test"
 python_files = ["test_*.py", "tests.py"]
+# Only "test_..." functions and "...Tests" classes are tests, so names such as
+# testimonials_for_treatment() and Testimonial are never collected by mistake.
+python_functions = ["test_*"]
+python_classes = ["*Tests"]
 addopts = ["-ra", "--strict-markers", "--strict-config", "--reuse-db"]
 filterwarnings = [
     # Fail the tests if our own code uses a deprecated Django API.

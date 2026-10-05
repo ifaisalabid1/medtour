@@ -14,6 +14,7 @@ from apps.core.models import (
     PublishableModel,
     TimeStampedModel,
 )
+from apps.core.rich_text import RichTextField
 from apps.core.search import weighted_search_vector
 from apps.core.uploads import unique_upload_path
 from apps.core.validators import (
@@ -76,7 +77,7 @@ class Hospital(TimeStampedModel, PublishableModel):
     summary = models.CharField(
         _("summary"), max_length=300, blank=True, help_text=SUMMARY_HELP_TEXT
     )
-    description = models.TextField(_("description"), blank=True)
+    description = RichTextField(_("description"), blank=True)
     established_year = models.PositiveSmallIntegerField(
         _("year established"),
         null=True,
@@ -220,7 +221,7 @@ class Doctor(TimeStampedModel, PublishableModel):
     summary = models.CharField(
         _("summary"), max_length=300, blank=True, help_text=SUMMARY_HELP_TEXT
     )
-    description = models.TextField(_("description"), blank=True)
+    description = RichTextField(_("description"), blank=True)
     photo = models.ImageField(
         _("photo"),
         upload_to=doctor_photo_path,
