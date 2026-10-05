@@ -7,6 +7,7 @@ dependencies = [
     "django-environ>=0.14.0",
     "django-unfold>=0.108.0",
     "django[argon2]>=6.1.1",
+    "pillow>=12.3.0",
     "psycopg[binary,pool]>=3.3.6",
 ]
 

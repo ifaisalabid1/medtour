@@ -1,29 +1,24 @@
 from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchVector, SearchVectorField
+from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.db.models import F, Q
 from django.db.models.functions import Lower
 from django.utils.translation import gettext_lazy as _
 
-from apps.core.models import SLUG_HELP_TEXT, PublishableModel, TimeStampedModel
-from apps.core.search import SEARCH_CONFIG
-
-ALSO_KNOWN_AS_HELP_TEXT = _(
-    "Other names and abbreviations patients search for, comma separated. "
-    "Example: TKR, knee arthroplasty."
+from apps.core.models import (
+    ALSO_KNOWN_AS_HELP_TEXT,
+    SLUG_HELP_TEXT,
+    SUMMARY_HELP_TEXT,
+    PublishableModel,
+    TimeStampedModel,
 )
-SUMMARY_HELP_TEXT = _(
-    "One or two plain sentences. Shown on listing cards and used as the "
-    "default search-engine description."
-)
+from apps.core.search import weighted_search_vector
 
 
-def search_vector_expression():
-    """Names count most (weight A); the summary counts less (weight B)."""
-    return (
-        SearchVector("name", weight="A", config=SEARCH_CONFIG)
-        + SearchVector("also_known_as", weight="A", config=SEARCH_CONFIG)
-        + SearchVector("summary", weight="B", config=SEARCH_CONFIG)
+def catalog_search_vector():
+    """Names and alternative names outrank the summary."""
+    return weighted_search_vector(
+        primary=("name", "also_known_as"), secondary=("summary",)
     )
 
 
@@ -92,7 +87,7 @@ class Treatment(TimeStampedModel, PublishableModel):
         help_text=_("Typical total stay, including recovery before flying home."),
     )
     search_vector = models.GeneratedField(
-        expression=search_vector_expression(),
+        expression=catalog_search_vector(),
         output_field=SearchVectorField(),
         db_persist=True,
     )
@@ -148,7 +143,7 @@ class Condition(TimeStampedModel, PublishableModel):
         help_text=_("Treatments that address this condition."),
     )
     search_vector = models.GeneratedField(
-        expression=search_vector_expression(),
+        expression=catalog_search_vector(),
         output_field=SearchVectorField(),
         db_persist=True,
     )

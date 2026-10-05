@@ -4,12 +4,25 @@ import operator
 import re
 from functools import reduce
 
-from django.contrib.postgres.search import Lexeme, SearchQuery
+from django.contrib.postgres.search import Lexeme, SearchQuery, SearchVector
 
 SEARCH_CONFIG = "english"
 MAX_QUERY_LENGTH = 100
 MAX_TERMS = 8
 MIN_TERM_LENGTH = 2
+
+
+def weighted_search_vector(
+    *, primary: tuple[str, ...], secondary: tuple[str, ...] = ()
+) -> SearchVector:
+    """Search vector where primary fields (weight A) outrank secondary ones (B).
+
+    Used as the expression of a model's generated ``search_vector`` column.
+    """
+    vectors = [
+        SearchVector(field, weight="A", config=SEARCH_CONFIG) for field in primary
+    ] + [SearchVector(field, weight="B", config=SEARCH_CONFIG) for field in secondary]
+    return reduce(operator.add, vectors)
 
 
 def build_prefix_search_query(text: str) -> SearchQuery | None:

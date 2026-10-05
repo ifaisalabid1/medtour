@@ -46,6 +46,7 @@ LOCAL_APPS = [
     "apps.accounts",
     "apps.locations",
     "apps.catalog",
+    "apps.providers",
 ]
 
 INSTALLED_APPS = UNFOLD_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -127,6 +128,12 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# --- Uploaded files ----------------------------------------------------------
+
+# Local disk for development. Production switches to Cloudflare R2 in Step 10.
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # --- Logging -----------------------------------------------------------------
 

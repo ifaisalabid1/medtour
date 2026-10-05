@@ -2,6 +2,14 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 SLUG_HELP_TEXT = _("Used in page URLs. Changing it breaks existing links.")
+ALSO_KNOWN_AS_HELP_TEXT = _(
+    "Other names and abbreviations patients search for, comma separated. "
+    "Example: TKR, knee arthroplasty."
+)
+SUMMARY_HELP_TEXT = _(
+    "One or two plain sentences. Shown on listing cards and used as the "
+    "default search-engine description."
+)
 
 
 class TimeStampedModel(models.Model):
