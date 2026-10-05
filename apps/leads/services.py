@@ -1,11 +1,13 @@
 from dataclasses import dataclass, field
 from datetime import timedelta
+from functools import partial
 
 from django.db import transaction
 from django.utils import timezone
 
 from .consent import CONSENT_TEXT_VERSION, CONSENT_TEXTS
 from .models import ConsentPurpose, ConsentRecord, Enquiry, EnquiryDocument
+from .tasks import send_enquiry_received_email, send_new_enquiry_alert_email
 
 # A real patient rarely sends more than one or two enquiries an hour.
 MAX_ENQUIRIES_PER_IP_PER_HOUR = 5
@@ -71,6 +73,12 @@ def create_enquiry(*, cleaned_data: dict, context: SubmissionContext) -> Enquiry
         _record_consent(enquiry, ConsentPurpose.PROCESS_ENQUIRY, context)
         if cleaned_data.get("consent_to_marketing"):
             _record_consent(enquiry, ConsentPurpose.MARKETING, context)
+
+        # Queue the emails only once the enquiry is committed; otherwise the
+        # worker could run before the data exists, or email about an enquiry
+        # that was rolled back.
+        transaction.on_commit(partial(send_enquiry_received_email.enqueue, enquiry.pk))
+        transaction.on_commit(partial(send_new_enquiry_alert_email.enqueue, enquiry.pk))
 
     return enquiry
 

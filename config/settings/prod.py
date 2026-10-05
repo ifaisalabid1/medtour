@@ -19,3 +19,21 @@ SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=False)
 # Real Turnstile keys are mandatory: the test keys accept every submission.
 TURNSTILE_SITE_KEY = env.str("TURNSTILE_SITE_KEY")
 TURNSTILE_SECRET_KEY = env.str("TURNSTILE_SECRET_KEY")
+
+# Email goes out through Amazon SES in the Mumbai region, via Anymail.
+MAILERS = {
+    "default": {
+        "BACKEND": "anymail.backends.amazon_ses.EmailBackend",
+        "OPTIONS": {
+            "client_params": {
+                "region_name": env.str("AWS_SES_REGION", default="ap-south-1"),
+                "aws_access_key_id": env.str("AWS_SES_ACCESS_KEY_ID"),
+                "aws_secret_access_key": env.str("AWS_SES_SECRET_ACCESS_KEY"),
+            },
+        },
+    },
+}
+DEFAULT_FROM_EMAIL = env.str("DJANGO_DEFAULT_FROM_EMAIL")
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+SITE_URL = env.str("SITE_URL")
+ENQUIRY_ALERT_EMAILS = env.list("ENQUIRY_ALERT_EMAILS")

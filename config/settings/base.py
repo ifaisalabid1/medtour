@@ -44,6 +44,7 @@ THIRD_PARTY_APPS = [
     "django_prose_editor",
     "phonenumber_field",
     "simple_history",
+    "django_tasks_db",
 ]
 LOCAL_APPS = [
     "apps.core",
@@ -166,6 +167,35 @@ TURNSTILE_SITE_KEY = env.str("TURNSTILE_SITE_KEY", default="1x000000000000000000
 TURNSTILE_SECRET_KEY = env.str(
     "TURNSTILE_SECRET_KEY", default="1x0000000000000000000000000000000AA"
 )
+
+# --- Background tasks ------------------------------------------------------
+
+# Tasks are stored in PostgreSQL and run by `manage.py db_worker`.
+TASKS = {
+    "default": {
+        "BACKEND": "django_tasks_db.DatabaseBackend",
+        "QUEUES": ["default", "emails"],
+        # Time-ordered UUIDs (Python 3.14+) keep the task table's index compact.
+        "OPTIONS": {"id_function": "uuid.uuid7"},
+    }
+}
+
+# --- Email -------------------------------------------------------------------
+
+# Development prints emails to the terminal. prod.py sends through Amazon SES.
+MAILERS = {
+    "default": {"BACKEND": "django.core.mail.backends.console.EmailBackend"},
+}
+DEFAULT_FROM_EMAIL = env.str(
+    "DJANGO_DEFAULT_FROM_EMAIL", default="Medtour <care@localhost>"
+)
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+# Used to build absolute links in emails (no trailing slash).
+SITE_URL = env.str("SITE_URL", default="http://127.0.0.1:8000")
+
+# Staff inboxes alerted about every new enquiry.
+ENQUIRY_ALERT_EMAILS: list[str] = env.list("ENQUIRY_ALERT_EMAILS", default=[])
 
 # --- Logging -----------------------------------------------------------------
 

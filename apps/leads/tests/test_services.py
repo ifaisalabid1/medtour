@@ -106,3 +106,41 @@ def test_withdrawing_consent_keeps_the_record(enquiry_data, turnstile_passes):
     consent = enquiry.consents.get()
     assert changed == 1
     assert consent.withdrawn_at is not None
+
+
+def test_emails_are_sent_once_the_enquiry_is_committed(
+    enquiry_data, turnstile_passes, django_capture_on_commit_callbacks, mailoutbox
+):
+    with django_capture_on_commit_callbacks(execute=True) as callbacks:
+        enquiry = create_enquiry(cleaned_data=cleaned(enquiry_data), context=CONTEXT)
+
+    assert len(callbacks) == 2
+    assert {tuple(email.to) for email in mailoutbox} == {
+        ("rahim@example.com",),
+        ("team@medtour.example",),
+    }
+    assert all(enquiry.reference in email.subject for email in mailoutbox)
+
+
+def test_no_emails_if_the_enquiry_is_rolled_back(
+    enquiry_data,
+    pdf_report,
+    turnstile_passes,
+    monkeypatch,
+    django_capture_on_commit_callbacks,
+    mailoutbox,
+):
+    from apps.leads.models import EnquiryDocument
+
+    def broken_save(*args, **kwargs):
+        raise OSError("storage unavailable")
+
+    monkeypatch.setattr(EnquiryDocument, "save", broken_save)
+
+    with django_capture_on_commit_callbacks(execute=True), pytest.raises(OSError):
+        create_enquiry(
+            cleaned_data=cleaned(enquiry_data, {"documents": [pdf_report]}),
+            context=CONTEXT,
+        )
+
+    assert mailoutbox == []

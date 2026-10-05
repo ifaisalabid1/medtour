@@ -1,0 +1,10 @@
+{% autoescape off %}New enquiry {{ enquiry.reference }}
+
+Patient:   {{ enquiry.full_name }}
+Country:   {{ enquiry.country.name }}
+Treatment: {{ enquiry.treatment.name|default:"Not sure yet" }}
+Documents: {{ document_count }}
+
+Open the case:
+{{ admin_url }}
+{% endautoescape %}

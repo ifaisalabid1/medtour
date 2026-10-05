@@ -13,3 +13,16 @@ STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.InMemoryStorage"},
     "private": {"BACKEND": "django.core.files.storage.InMemoryStorage"},
 }
+
+# Run tasks immediately, in the test process.
+TASKS = {
+    "default": {
+        "BACKEND": "django.tasks.backends.immediate.ImmediateBackend",
+        "QUEUES": ["default", "emails"],
+    }
+}
+
+# Collect sent emails in django.core.mail.outbox.
+MAILERS = {"default": {"BACKEND": "django.core.mail.backends.locmem.EmailBackend"}}
+SITE_URL = "https://medtour.example"
+ENQUIRY_ALERT_EMAILS = ["team@medtour.example"]

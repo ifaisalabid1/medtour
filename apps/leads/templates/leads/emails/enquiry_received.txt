@@ -1,0 +1,15 @@
+{% autoescape off %}Dear {{ enquiry.full_name }},
+
+Thank you for contacting us. We have received your enquiry.
+
+Your reference: {{ enquiry.reference }}
+
+A case manager will contact you within 24 hours{% if enquiry.prefers_whatsapp %} on WhatsApp at {{ enquiry.phone }}{% else %} by phone or email{% endif %}. Please quote your reference when you get in touch.
+
+If you have more medical reports, simply reply to this email and attach them.
+
+This is not medical advice. Treatment plans and cost estimates come from partner hospitals after they review your reports.
+
+Warm regards,
+The care team
+{% endautoescape %}

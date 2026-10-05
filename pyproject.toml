@@ -3,11 +3,13 @@ name = "medtour"
 version = "0.1.0"
 requires-python = ">=3.14"
 dependencies = [
+    "django-anymail[amazon-ses]>=15.2",
     "django-countries>=9.1.0",
     "django-environ>=0.14.0",
     "django-phonenumber-field[phonenumbers]>=8.5.0",
     "django-prose-editor[sanitize]>=0.27.3",
     "django-simple-history>=3.13.0",
+    "django-tasks-db>=0.13.0",
     "django-unfold>=0.108.0",
     "django[argon2]>=6.1.1",
     "pillow>=12.3.0",
