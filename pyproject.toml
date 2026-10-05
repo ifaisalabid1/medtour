@@ -3,6 +3,7 @@ name = "medtour"
 version = "0.1.0"
 requires-python = ">=3.14"
 dependencies = [
+    "django-countries>=9.1.0",
     "django-environ>=0.14.0",
     "django-unfold>=0.108.0",
     "django[argon2]>=6.1.1",
@@ -12,6 +13,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "django-debug-toolbar>=8.0.0",
+    "model-bakery>=1.24.1",
     "pre-commit>=4.6.2",
     "pytest>=9.1.1",
     "pytest-django>=4.14.0",

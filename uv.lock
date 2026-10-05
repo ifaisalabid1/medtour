@@ -171,6 +171,19 @@ argon2 = [
 ]
 
 [[package]]
+name = "django-countries"
+version = "9.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "asgiref" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/de/7e/54c144d213ccdd4f3e74e044c4b6cb7a0c2ccf2e738886fd61b9a0a376df/django_countries-9.1.0.tar.gz", hash = "sha256:c1027417e1d1ebad5ac8fbc45a7578fc400c4fc895d6b865e001c16ba4be0939", size = 614115, upload-time = "2026-09-10T22:24:18Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9c/86/f4a3a1bc0827e19bd0ec7267d80725e4f02916d34a279747672436a0aa5b/django_countries-9.1.0-py3-none-any.whl", hash = "sha256:18c9f6e1a8e32356656b1db5ee94121310cbc3b91dc78171052a9ef9d57d5318", size = 928029, upload-time = "2026-09-10T22:24:16.325Z" },
+]
+
+[[package]]
 name = "django-debug-toolbar"
 version = "8.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -237,6 +250,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "django", extra = ["argon2"] },
+    { name = "django-countries" },
     { name = "django-environ" },
     { name = "django-unfold" },
     { name = "psycopg", extra = ["binary", "pool"] },
@@ -245,6 +259,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "django-debug-toolbar" },
+    { name = "model-bakery" },
     { name = "pre-commit" },
     { name = "pytest" },
     { name = "pytest-django" },
@@ -254,6 +269,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "django", extras = ["argon2"], specifier = ">=6.1.1" },
+    { name = "django-countries", specifier = ">=9.1.0" },
     { name = "django-environ", specifier = ">=0.14.0" },
     { name = "django-unfold", specifier = ">=0.108.0" },
     { name = "psycopg", extras = ["binary", "pool"], specifier = ">=3.3.6" },
@@ -262,10 +278,23 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "django-debug-toolbar", specifier = ">=8.0.0" },
+    { name = "model-bakery", specifier = ">=1.24.1" },
     { name = "pre-commit", specifier = ">=4.6.2" },
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "pytest-django", specifier = ">=4.14.0" },
     { name = "ruff", specifier = ">=0.16.10" },
+]
+
+[[package]]
+name = "model-bakery"
+version = "1.24.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/39/e7/dcd5854ba8b984510407c08b363af8f44556675cb8fe98a1413ac8967649/model_bakery-1.24.1.tar.gz", hash = "sha256:36e448446794b1a29f2bd247d76c1af990e38cb38e9e39870580f4d79899e6a7", size = 29657, upload-time = "2026-09-22T11:31:20.659Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/22/00/9cadd0e5d36ba732e3b58ccf7567b9e80059da2780a1b281096f0e91e846/model_bakery-1.24.1-py3-none-any.whl", hash = "sha256:58eae4ab3ed3504bbac965daf89626a034021233ad7bc81482aef75228cafb5c", size = 32028, upload-time = "2026-09-22T11:31:19.302Z" },
 ]
 
 [[package]]

@@ -37,10 +37,13 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
-THIRD_PARTY_APPS: list[str] = []
+THIRD_PARTY_APPS = [
+    "django_countries",
+]
 LOCAL_APPS = [
     "apps.core",
     "apps.accounts",
+    "apps.locations",
 ]
 
 INSTALLED_APPS = UNFOLD_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
