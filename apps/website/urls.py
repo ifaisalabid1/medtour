@@ -1,6 +1,8 @@
+from django.contrib.sitemaps import views as sitemap_views
 from django.urls import path
 
 from . import views
+from .sitemaps import SITEMAPS
 
 app_name = "website"
 
@@ -25,4 +27,18 @@ urlpatterns = [
         name="corridor_detail",
     ),
     path("knowledge/<slug:slug>/", views.article_detail, name="article_detail"),
+    # Search engines
+    path("robots.txt", views.robots_txt, name="robots_txt"),
+    path(
+        "sitemap.xml",
+        sitemap_views.index,
+        {"sitemaps": SITEMAPS, "sitemap_url_name": "website:sitemap_section"},
+        name="sitemap_index",
+    ),
+    path(
+        "sitemap-<section>.xml",
+        sitemap_views.sitemap,
+        {"sitemaps": SITEMAPS},
+        name="sitemap_section",
+    ),
 ]

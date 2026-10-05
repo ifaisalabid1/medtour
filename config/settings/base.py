@@ -38,6 +38,7 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
+    "django.contrib.sitemaps",
 ]
 THIRD_PARTY_APPS = [
     "django_countries",
@@ -82,6 +83,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "apps.website.context_processors.site",
             ],
         },
     },
@@ -193,7 +195,11 @@ DEFAULT_FROM_EMAIL = env.str(
 )
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
-# Used to build absolute links in emails (no trailing slash).
+# Shown in page titles and emails.
+SITE_NAME = env.str("SITE_NAME", default="Medtour")
+
+# Used to build absolute links in emails, sitemaps and structured data
+# (no trailing slash).
 SITE_URL = env.str("SITE_URL", default="http://127.0.0.1:8000")
 
 # Staff inboxes alerted about every new enquiry.

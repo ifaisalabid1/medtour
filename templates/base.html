@@ -1,9 +1,14 @@
-<!doctype html>
+{% load json_ld %}<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}{% endblock %} | {{ SITE_NAME }}</title>
+    {% if meta_description %}<meta name="description" content="{{ meta_description }}">{% endif %}
+    {% if noindex %}<meta name="robots" content="noindex, follow">{% endif %}
+    {# One canonical address per page: no tracking parameters, no old slugs. #}
+    <link rel="canonical" href="{{ SITE_URL }}{{ request.path }}">
+    {% for data in structured_data %}{% json_ld data %}{% endfor %}
   </head>
   <body>
     <main>
