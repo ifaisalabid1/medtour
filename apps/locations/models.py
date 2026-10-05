@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.functions import Lower
+from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
@@ -109,3 +110,6 @@ class SourceCountry(TimeStampedModel, PublishableModel):
         if not self.slug:
             self.slug = slugify(self.country.name)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("website:corridor_detail", kwargs={"slug": self.slug})

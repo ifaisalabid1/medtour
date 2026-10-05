@@ -35,3 +35,7 @@ def testimonials_for_treatment(treatment: Treatment) -> QuerySet[Testimonial]:
 def testimonials_from_country(country_code: str) -> QuerySet[Testimonial]:
     """For pages like "medical travel from Bangladesh to India"."""
     return published_testimonials().filter(country=country_code)
+
+
+def articles_about_treatment(treatment: Treatment) -> QuerySet[Article]:
+    return published_articles().filter(treatments=treatment)

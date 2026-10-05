@@ -2,6 +2,7 @@ from django.contrib.postgres.search import SearchRank
 from django.db.models import F, Prefetch, Q, QuerySet
 from django.utils import timezone
 
+from apps.catalog.models import Speciality
 from apps.catalog.selectors import published_specialities
 from apps.core.search import build_prefix_search_query
 
@@ -70,3 +71,15 @@ def search_doctors(text: str) -> QuerySet[Doctor]:
         .annotate(rank=SearchRank(F("search_vector"), query))
         .order_by("-rank", "name")
     )
+
+
+def hospitals_for_speciality(speciality: Speciality) -> QuerySet[Hospital]:
+    return published_hospitals().filter(specialities=speciality)
+
+
+def doctors_for_speciality(speciality: Speciality) -> QuerySet[Doctor]:
+    return published_doctors().filter(specialities=speciality)
+
+
+def doctors_at_hospital(hospital: Hospital) -> QuerySet[Doctor]:
+    return published_doctors().filter(hospitals=hospital)

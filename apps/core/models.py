@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -39,3 +40,31 @@ class PublishableModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class SlugRedirect(TimeStampedModel):
+    """An old slug that should permanently redirect to a page's current URL.
+
+    Created automatically when an editor changes a slug, so links from Google,
+    WhatsApp shares and other websites keep working (see core/redirects.py).
+    """
+
+    content_type = models.ForeignKey(
+        ContentType, verbose_name=_("page type"), on_delete=models.CASCADE
+    )
+    object_id = models.PositiveBigIntegerField(_("page id"))
+    old_slug = models.SlugField(_("old slug"), max_length=200)
+
+    class Meta:
+        verbose_name = _("slug redirect")
+        verbose_name_plural = _("slug redirects")
+        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["content_type", "old_slug"],
+                name="core_slugredirect_unique_old_slug",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.content_type.model}: {self.old_slug}"

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Medical travel from {{ source_country.country.name }} to India{% endblock %}
+{% block content %}
+  <h1>Medical travel from {{ source_country.country.name }} to India</h1>
+  {{ source_country.intro|safe }}
+  <h2>Visa information</h2>
+  {{ source_country.visa_info|safe }}
+  {% for testimonial in testimonials %}
+    <blockquote>{{ testimonial.quote }}</blockquote>
+    <p>{{ testimonial.patient_display_name }}</p>
+  {% endfor %}
+{% endblock %}

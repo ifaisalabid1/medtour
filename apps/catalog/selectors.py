@@ -48,3 +48,11 @@ def search_treatments(text: str) -> QuerySet[Treatment]:
         .annotate(rank=SearchRank(F("search_vector"), query))
         .order_by("-rank", "name")
     )
+
+
+def treatments_in_speciality(speciality: Speciality) -> QuerySet[Treatment]:
+    return published_treatments().filter(speciality=speciality)
+
+
+def treatments_for_condition(condition: Condition) -> QuerySet[Treatment]:
+    return published_treatments().filter(conditions=condition)

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Dr. {{ doctor.name }}{% endblock %}
+{% block content %}
+  <h1>Dr. {{ doctor.name }}</h1>
+  <p>{{ doctor.designation }}</p>
+  <p>{{ doctor.qualifications }}</p>
+  {% if doctor.years_of_experience %}
+    <p>{{ doctor.years_of_experience }} years of experience</p>
+  {% endif %}
+  <ul>
+    {% for hospital in doctor.public_hospitals %}
+      <li><a href="{{ hospital.get_absolute_url }}">{{ hospital.name }}</a></li>
+    {% endfor %}
+  </ul>
+  {{ doctor.description|safe }}
+{% endblock %}

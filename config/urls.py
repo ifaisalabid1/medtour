@@ -6,6 +6,7 @@ from django.urls import include, path
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     path("staff/leads/", include("apps.leads.urls")),
+    path("", include("apps.website.urls")),
 ]
 
 # Serves uploaded files during development only (does nothing when DEBUG=False).

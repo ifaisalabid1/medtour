@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}{{ treatment.name }} cost in India{% endblock %}
+{% block content %}
+  <h1>{{ treatment.name }} cost in India</h1>
+  <p>{{ treatment.summary }}</p>
+  {% if cost %}
+    <p>
+      Indicative cost: {{ cost.min_inr|inr }} to {{ cost.max_inr|inr }}
+      at {{ cost.hospital_count }} hospital{{ cost.hospital_count|pluralize }}
+    </p>
+  {% endif %}
+  <ul>
+    {% for package in packages %}
+      <li>
+        <a href="{{ package.hospital.get_absolute_url }}">{{ package.hospital.name }}</a>,
+        {{ package.hospital.city.name }}: from {{ package.price_min_inr|inr }}
+      </li>
+    {% endfor %}
+  </ul>
+  {# Rich text is cleaned with nh3 when saved (apps/core/rich_text.py). #}
+  {{ treatment.description|safe }}
+  {% for faq in faqs %}
+    <h2>{{ faq.question }}</h2>
+    {{ faq.answer|safe }}
+  {% endfor %}
+{% endblock %}

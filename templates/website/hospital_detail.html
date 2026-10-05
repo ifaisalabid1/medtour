@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}{{ hospital.name }}, {{ hospital.city.name }}{% endblock %}
+{% block content %}
+  <h1>{{ hospital.name }}</h1>
+  <p>{{ hospital.city.name }}, {{ hospital.city.state }}</p>
+  <ul>
+    {% for record in hospital.current_accreditations %}
+      <li>{{ record.accreditation.abbreviation }}</li>
+    {% endfor %}
+  </ul>
+  {{ hospital.description|safe }}
+  <ul>
+    {% for package in packages %}
+      <li>
+        <a href="{{ package.treatment.get_absolute_url }}">{{ package.treatment.name }}</a>:
+        from {{ package.price_min_inr|inr }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

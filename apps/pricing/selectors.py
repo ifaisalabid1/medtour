@@ -7,6 +7,7 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone
 
 from apps.catalog.models import Treatment
+from apps.providers.models import Hospital
 
 from .models import ExchangeRate, TreatmentPackage
 
@@ -77,4 +78,14 @@ def current_inr_per_unit(currency: str) -> Decimal | None:
         ExchangeRate.objects.filter(currency=currency, rate_date__gte=oldest_allowed)
         .values_list("inr_per_unit", flat=True)
         .first()
+    )
+
+
+def packages_at_hospital(hospital: Hospital) -> QuerySet[TreatmentPackage]:
+    """The price list on a hospital page, by treatment name."""
+    return (
+        published_packages()
+        .filter(hospital=hospital)
+        .select_related("treatment")
+        .order_by("treatment__name")
     )

@@ -3,6 +3,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.db import models
 from django.db.models import F, Q
 from django.db.models.functions import Lower
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from apps.core.models import (
@@ -52,6 +53,9 @@ class Speciality(TimeStampedModel, PublishableModel):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("website:speciality_detail", kwargs={"slug": self.slug})
 
 
 class Treatment(TimeStampedModel, PublishableModel):
@@ -120,6 +124,9 @@ class Treatment(TimeStampedModel, PublishableModel):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("website:treatment_detail", kwargs={"slug": self.slug})
+
 
 class Condition(TimeStampedModel, PublishableModel):
     name = models.CharField(_("name"), max_length=200)
@@ -166,3 +173,6 @@ class Condition(TimeStampedModel, PublishableModel):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("website:condition_detail", kwargs={"slug": self.slug})

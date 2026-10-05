@@ -3,6 +3,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models.functions import Lower
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -134,6 +135,9 @@ class Hospital(TimeStampedModel, PublishableModel):
     def __str__(self):
         return f"{self.name}, {self.city}"
 
+    def get_absolute_url(self):
+        return reverse("website:hospital_detail", kwargs={"slug": self.slug})
+
 
 class HospitalAccreditation(models.Model):
     """A hospital's accreditation, with its expiry date.
@@ -259,6 +263,9 @@ class Doctor(TimeStampedModel, PublishableModel):
 
     def __str__(self):
         return f"Dr. {self.name}"
+
+    def get_absolute_url(self):
+        return reverse("website:doctor_detail", kwargs={"slug": self.slug})
 
     @property
     def years_of_experience(self) -> int | None:

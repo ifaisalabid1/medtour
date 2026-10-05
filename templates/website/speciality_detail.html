@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}{{ speciality.name }} treatment in India{% endblock %}
+{% block content %}
+  <h1>{{ speciality.name }} treatment in India</h1>
+  <p>{{ speciality.summary }}</p>
+  <ul>
+    {% for treatment in treatments %}
+      <li>
+        <a href="{{ treatment.get_absolute_url }}">{{ treatment.name }}</a>
+        {% if treatment.starting_price_inr %}from {{ treatment.starting_price_inr|inr }}{% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+  {{ speciality.description|safe }}
+{% endblock %}

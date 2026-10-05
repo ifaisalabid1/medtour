@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ condition.name }} treatment in India{% endblock %}
+{% block content %}
+  <h1>{{ condition.name }}</h1>
+  <p>{{ condition.summary }}</p>
+  <ul>
+    {% for treatment in treatments %}
+      <li><a href="{{ treatment.get_absolute_url }}">{{ treatment.name }}</a></li>
+    {% endfor %}
+  </ul>
+  {{ condition.description|safe }}
+{% endblock %}

@@ -55,6 +55,7 @@ LOCAL_APPS = [
     "apps.pricing",
     "apps.content",
     "apps.leads",
+    "apps.website",
 ]
 
 INSTALLED_APPS = UNFOLD_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -68,6 +69,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
+    "apps.core.redirects.SlugRedirectMiddleware",
 ]
 
 TEMPLATES = [
