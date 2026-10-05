@@ -9,6 +9,7 @@ dependencies = [
     "django-phonenumber-field[phonenumbers]>=8.5.0",
     "django-prose-editor[sanitize]>=0.27.3",
     "django-simple-history>=3.13.0",
+    "django-storages[s3]>=1.14.6",
     "django-tasks-db>=0.13.0",
     "django-unfold>=0.108.0",
     "django[argon2]>=6.1.1",

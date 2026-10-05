@@ -1,3 +1,5 @@
+from config.storage import r2_storages
+
 from .base import *
 
 DEBUG = False
@@ -37,3 +39,17 @@ DEFAULT_FROM_EMAIL = env.str("DJANGO_DEFAULT_FROM_EMAIL")
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 SITE_URL = env.str("SITE_URL")
 ENQUIRY_ALERT_EMAILS = env.list("ENQUIRY_ALERT_EMAILS")
+
+# Uploaded files live in Cloudflare R2: images in a public bucket served from
+# your media domain, medical documents in a private bucket.
+STORAGES = {
+    **STORAGES,
+    **r2_storages(
+        account_id=env.str("R2_ACCOUNT_ID"),
+        access_key=env.str("R2_ACCESS_KEY_ID"),
+        secret_key=env.str("R2_SECRET_ACCESS_KEY"),
+        public_bucket=env.str("R2_PUBLIC_BUCKET"),
+        public_domain=env.str("R2_PUBLIC_DOMAIN"),
+        private_bucket=env.str("R2_PRIVATE_BUCKET"),
+    ),
+}
