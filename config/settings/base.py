@@ -28,6 +28,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 UNFOLD_APPS = [
     "unfold",  # must come before django.contrib.admin
+    "unfold.contrib.simple_history",
 ]
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -41,6 +42,8 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "django_countries",
     "django_prose_editor",
+    "phonenumber_field",
+    "simple_history",
 ]
 LOCAL_APPS = [
     "apps.core",
@@ -50,6 +53,7 @@ LOCAL_APPS = [
     "apps.providers",
     "apps.pricing",
     "apps.content",
+    "apps.leads",
 ]
 
 INSTALLED_APPS = UNFOLD_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -62,6 +66,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 TEMPLATES = [
@@ -137,6 +142,30 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 # Local disk for development. Production switches to Cloudflare R2 in Step 10.
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    # Medical reports. Outside MEDIA_ROOT, so no URL ever serves them.
+    "private": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {"location": BASE_DIR / "private_media"},
+    },
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
+
+# --- Phone numbers -----------------------------------------------------------
+
+# Numbers typed without a country code are treated as Indian.
+PHONENUMBER_DEFAULT_REGION = "IN"
+
+# --- Cloudflare Turnstile (spam protection on public forms) -----------------
+
+# Defaults are Cloudflare's official test keys, which always pass.
+# Production must set real keys (prod.py requires them).
+TURNSTILE_SITE_KEY = env.str("TURNSTILE_SITE_KEY", default="1x00000000000000000000AA")
+TURNSTILE_SECRET_KEY = env.str(
+    "TURNSTILE_SECRET_KEY", default="1x0000000000000000000000000000000AA"
+)
 
 # --- Logging -----------------------------------------------------------------
 

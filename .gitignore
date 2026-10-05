@@ -226,3 +226,4 @@ __marimo__/
 # Project
 staticfiles/
 media/
+private_media/

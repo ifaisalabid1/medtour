@@ -15,3 +15,7 @@ CSRF_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = env.int("DJANGO_SECURE_HSTS_SECONDS", default=60)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=False)
+
+# Real Turnstile keys are mandatory: the test keys accept every submission.
+TURNSTILE_SITE_KEY = env.str("TURNSTILE_SITE_KEY")
+TURNSTILE_SECRET_KEY = env.str("TURNSTILE_SECRET_KEY")
