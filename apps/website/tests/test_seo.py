@@ -191,3 +191,4 @@ def test_robots_txt_points_to_the_sitemap_and_hides_staff_pages(client, settings
     assert "Disallow: /staff/" in response.text
     assert "Sitemap: https://medtour.example/sitemap.xml" in response.text
     assert settings.ADMIN_URL not in response.text
+    assert "Disallow: /health/" in response.text

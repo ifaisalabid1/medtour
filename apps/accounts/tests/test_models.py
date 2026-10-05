@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.auth import authenticate, get_user_model
 from django.core.exceptions import ValidationError
+from django.test import RequestFactory
 
 User = get_user_model()
 PASSWORD = "a-long-test-password"
@@ -41,7 +42,13 @@ def test_create_superuser_rejects_non_staff():
 def test_login_email_is_case_insensitive():
     User.objects.create_user(email="doctor@example.com", password=PASSWORD)
 
-    assert authenticate(username="Doctor@Example.com", password=PASSWORD) is not None
+    # django-axes needs the request (for the IP address), as a login view has.
+    request = RequestFactory().post("/admin/login/")
+
+    assert (
+        authenticate(request, username="Doctor@Example.com", password=PASSWORD)
+        is not None
+    )
 
 
 def test_email_uniqueness_ignores_case():

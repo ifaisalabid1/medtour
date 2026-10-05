@@ -1,8 +1,10 @@
 """Settings shared by every environment. Environment files import from here."""
 
+from datetime import timedelta
 from pathlib import Path
 
 import environ
+from django.utils.csp import CSP
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -46,6 +48,8 @@ THIRD_PARTY_APPS = [
     "phonenumber_field",
     "simple_history",
     "django_tasks_db",
+    "axes",
+    "health_check",
 ]
 LOCAL_APPS = [
     "apps.core",
@@ -63,6 +67,7 @@ INSTALLED_APPS = UNFOLD_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "apps.core.csp.SiteContentSecurityPolicyMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -71,6 +76,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
     "apps.core.redirects.SlugRedirectMiddleware",
+    # Must be last: it turns failed-login lockouts into a response.
+    "axes.middleware.AxesMiddleware",
 ]
 
 TEMPLATES = [
@@ -81,6 +88,7 @@ TEMPLATES = [
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.request",
+                "django.template.context_processors.csp",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "apps.website.context_processors.site",
@@ -105,6 +113,18 @@ DATABASES = {
 }
 
 AUTH_USER_MODEL = "accounts.User"
+AUTHENTICATION_BACKENDS = [
+    # Must be first: it blocks locked-out logins before the password is checked.
+    "axes.backends.AxesStandaloneBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+# Only staff log in, always through the admin.
+LOGIN_URL = "admin:login"
+LOGIN_REDIRECT_URL = "admin:index"
+
+# Staff sessions can reach patient data, so they expire after a working day.
+SESSION_COOKIE_AGE = 60 * 60 * 12
 
 # --- Authentication ----------------------------------------------------------
 
@@ -204,6 +224,49 @@ SITE_URL = env.str("SITE_URL", default="http://127.0.0.1:8000")
 
 # Staff inboxes alerted about every new enquiry.
 ENQUIRY_ALERT_EMAILS: list[str] = env.list("ENQUIRY_ALERT_EMAILS", default=[])
+
+# --- Security ----------------------------------------------------------------
+
+# Header carrying the real visitor IP behind Cloudflare, e.g.
+# "HTTP_CF_CONNECTING_IP". Empty means use REMOTE_ADDR (development).
+# See apps/core/request_info.py before setting it.
+CLIENT_IP_HEADER = env.str("CLIENT_IP_HEADER", default="")
+
+# Lock an account after 5 failed admin logins from the same IP, for 30 minutes.
+# Locking by username + IP means an attacker can't lock staff out from elsewhere.
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = timedelta(minutes=30)
+AXES_LOCKOUT_PARAMETERS = [["username", "ip_address"]]
+AXES_RESET_ON_SUCCESS = True
+# The admin login form calls its email field "username"; without this, Axes
+# looks for a field named after USERNAME_FIELD ("email") and records no user.
+AXES_USERNAME_FORM_FIELD = "username"
+AXES_CLIENT_IP_CALLABLE = "apps.core.request_info.client_ip"
+AXES_VERBOSE = False  # no start-up banner; lockouts are still logged
+
+# Content Security Policy: the browser only runs scripts and loads resources
+# from our own domain, which blocks most injected-script (XSS) attacks.
+# Inline scripts need the per-request nonce: <script nonce="{{ csp_nonce }}">.
+SECURE_CSP = {
+    "default-src": [CSP.SELF],
+    "script-src": [CSP.SELF, CSP.NONCE],
+    "style-src": [CSP.SELF, CSP.NONCE],
+    "img-src": [CSP.SELF],
+    "font-src": [CSP.SELF],
+    "connect-src": [CSP.SELF],
+    "object-src": [CSP.NONE],
+    "base-uri": [CSP.SELF],
+    "form-action": [CSP.SELF],
+    "frame-ancestors": [CSP.NONE],
+}
+# Admin only (see apps/core/csp.py). No nonce here: browsers ignore
+# 'unsafe-inline' when a nonce is present.
+ADMIN_CSP = {
+    **SECURE_CSP,
+    "script-src": [CSP.SELF, CSP.UNSAFE_INLINE, CSP.UNSAFE_EVAL],
+    "style-src": [CSP.SELF, CSP.UNSAFE_INLINE],
+}
+
 
 # --- Logging -----------------------------------------------------------------
 

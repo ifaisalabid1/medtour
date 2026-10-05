@@ -206,6 +206,7 @@ def robots_txt(request):
     lines = [
         "User-agent: *",
         "Disallow: /staff/",
+        "Disallow: /health/",
         "",
         f"Sitemap: {settings.SITE_URL}{reverse('website:sitemap_index')}",
     ]
