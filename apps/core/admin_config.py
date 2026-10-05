@@ -7,3 +7,9 @@ def environment_callback(request):
     if settings.DEBUG:
         return [_("Development"), "info"]
     return [_("Production"), "danger"]
+
+
+TIMESTAMPS_FIELDSET = (
+    _("Timestamps"),
+    {"fields": ("created_at", "updated_at"), "classes": ("collapse",)},
+)

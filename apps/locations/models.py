@@ -4,7 +4,7 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
-from apps.core.models import PublishableModel, TimeStampedModel
+from apps.core.models import SLUG_HELP_TEXT, PublishableModel, TimeStampedModel
 
 # India's 28 states and 8 union territories. Stored exactly as displayed.
 INDIAN_STATES_AND_UTS = (
@@ -56,7 +56,7 @@ class City(TimeStampedModel, PublishableModel):
         _("slug"),
         max_length=100,
         unique=True,
-        help_text=_("Used in page URLs. Changing it breaks existing links."),
+        help_text=SLUG_HELP_TEXT,
     )
     state = models.CharField(
         _("state / union territory"), max_length=100, choices=STATE_CHOICES

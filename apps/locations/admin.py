@@ -2,12 +2,9 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from unfold.admin import ModelAdmin
 
-from .models import City, SourceCountry
+from apps.core.admin_config import TIMESTAMPS_FIELDSET
 
-TIMESTAMPS_FIELDSET = (
-    _("Timestamps"),
-    {"fields": ("created_at", "updated_at"), "classes": ("collapse",)},
-)
+from .models import City, SourceCountry
 
 
 @admin.register(City)
