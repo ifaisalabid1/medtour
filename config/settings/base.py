@@ -47,6 +47,7 @@ LOCAL_APPS = [
     "apps.locations",
     "apps.catalog",
     "apps.providers",
+    "apps.pricing",
 ]
 
 INSTALLED_APPS = UNFOLD_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
