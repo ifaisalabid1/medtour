@@ -1,0 +1,67 @@
+<section id="guides" class="border-t border-slate-200">
+  <div class="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 py-16 sm:px-6 lg:px-8 lg:py-24 {% if guides %}lg:grid-cols-2{% endif %}">
+    <div id="faqs">
+      <c-section-heading eyebrow="FAQs" title="Questions patients ask us" />
+      <div class="space-y-3">
+        <c-faq-item group="home-faq"
+                    question="How are treatment costs worked out?"
+                    :open="True">
+          Each range runs from the lowest to the highest package price our partner hospitals have quoted, with the date
+          each price was last confirmed. Your final quote depends on your medical reports, the treatment plan and the
+          hospital you choose.
+        </c-faq-item>
+        <c-faq-item group="home-faq" question="What happens after I send an enquiry?">
+          You receive a reference number by email straight away. A patient coordinator reviews your details, may ask for
+          more reports, and then shares written opinions and quotes from the hospitals you approve.
+        </c-faq-item>
+        <c-faq-item group="home-faq" question="Who sees my medical reports?">
+          Only our patient team and the hospitals you approve. Your reports are stored privately and never published. You
+          can withdraw your consent and ask us to delete your data at any time.
+        </c-faq-item>
+        <c-faq-item group="home-faq" question="Do I need a medical visa for India?">
+          Most international patients travel on an Indian medical visa, which many nationalities can apply for online as
+          an e-Medical visa. Once you choose a hospital, it issues an invitation letter for your application, and we
+          share the steps for your country.
+        </c-faq-item>
+        <c-faq-item group="home-faq" question="Do you charge patients for your help?">
+          No. Our service is free for patients: partner hospitals pay us a fee when a patient we referred is treated.
+          You pay the hospital directly for your treatment.
+        </c-faq-item>
+      </div>
+    </div>
+    {% if guides %}
+      <div>
+        <c-section-heading eyebrow="Patient guides" title="Reviewed by doctors" />
+        <div class="space-y-4">
+          {% for article in guides %}
+            <article class="flex gap-4 rounded-2xl border border-slate-200 bg-white p-4 transition hover:shadow-md">
+              <div class="size-20 shrink-0 overflow-hidden rounded-xl bg-brand-50">
+                {% if article.cover_image %}
+                  <img src="{{ article.cover_image.url }}"
+                       alt=""
+                       width="160"
+                       height="160"
+                       loading="lazy"
+                       decoding="async"
+                       class="h-full w-full object-cover">
+                {% else %}
+                  <div class="grid h-full place-items-center text-brand-300">
+                    <c-icon name="file-text" class="size-8" />
+                  </div>
+                {% endif %}
+              </div>
+              <div class="min-w-0">
+                <h3 class="font-semibold leading-snug">
+                  <a href="{{ article.get_absolute_url }}" class="hover:text-brand-700">{{ article.title }}</a>
+                </h3>
+                <p class="mt-1 text-sm text-slate-600">
+                  Medically reviewed by {{ article.medical_reviewer.name }} · {{ article.reviewed_on|date:"j M Y" }}
+                </p>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>

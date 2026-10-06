@@ -1,0 +1,41 @@
+{% if stories or countries %}
+  <section class="bg-brand-700 text-white">
+    <div class="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 py-16 sm:px-6 lg:px-8 lg:py-20 {% if stories and countries %}lg:grid-cols-2{% endif %}">
+      {% if stories %}
+        <div>
+          <p class="mb-2 text-xs font-bold uppercase tracking-widest text-brand-100">Patient stories</p>
+          <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">In their own words</h2>
+          <div class="mt-8 space-y-5">
+            {% for story in stories %}
+              <figure class="rounded-2xl bg-white/10 p-6 ring-1 ring-white/15">
+                <blockquote class="text-lg leading-relaxed">
+                  “{{ story.quote }}”
+                </blockquote>
+                <figcaption class="mt-4 text-sm text-brand-100">
+                  <span class="font-semibold text-white">{{ story.patient_display_name }}</span>, {{ story.country.name }}
+                  {% if story.treatment %}· {{ story.treatment.name }}{% endif %}
+                </figcaption>
+              </figure>
+            {% endfor %}
+          </div>
+          <p class="mt-4 text-xs text-brand-100">Shared with each patient's written consent.</p>
+        </div>
+      {% endif %}
+      {% if countries %}
+        <div>
+          <p class="mb-2 text-xs font-bold uppercase tracking-widest text-brand-100">Medical travel</p>
+          <h2 class="text-3xl font-extrabold tracking-tight md:text-4xl">Travelling to India for treatment?</h2>
+          <p class="mt-3 text-brand-100">Medical visa steps, documents and travel notes for your country.</p>
+          <ul class="mt-8 flex flex-wrap gap-2">
+            {% for source_country in countries %}
+              <li>
+                <a href="{{ source_country.get_absolute_url }}"
+                   class="inline-block rounded-full bg-white px-4 py-2 text-sm font-semibold text-brand-800 transition hover:bg-brand-50">{{ source_country.country.name }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endif %}

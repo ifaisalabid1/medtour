@@ -1,5 +1,6 @@
 import pytest
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from django.utils import timezone
 from model_bakery import baker
 
@@ -51,3 +52,11 @@ def test_years_of_experience_is_none_when_unknown():
 
 def test_doctor_str_adds_the_title():
     assert str(Doctor(name="Naresh Trehan")) == "Dr. Naresh Trehan"
+
+
+def test_a_registration_cannot_be_verified_without_its_number():
+    doctor = baker.make_recipe("apps.providers.tests.doctor")
+    doctor.registration_verified_on = timezone.localdate()
+
+    with pytest.raises(IntegrityError):
+        doctor.save()

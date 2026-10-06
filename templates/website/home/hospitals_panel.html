@@ -1,0 +1,33 @@
+{% comment %}
+  The city chips and hospital cards. Also returned on its own when a chip is
+  clicked: htmx morphs it in place, so keyboard focus stays on the chip.
+  Without JavaScript, the chips are ordinary links to the filtered page.
+{% endcomment %}
+{% url 'website:home' as home_url %}
+<div id="hospitals-panel"
+     class="transition-opacity [&.htmx-request]:opacity-60">
+  <nav aria-label="Filter hospitals by city"
+       class="mb-8 flex flex-wrap gap-2"
+       hx-target:inherited="#hospitals-panel"
+       hx-swap:inherited="outerMorph"
+       hx-push-url:inherited="true"
+       hx-indicator:inherited="#hospitals-panel">
+    <a id="city-all"
+       href="{{ home_url }}#hospitals"
+       hx-get="{{ home_url }}"
+       {% if not selected_city %}aria-current="true"{% endif %}
+       class="rounded-full border px-4 py-2 text-sm font-semibold transition {% if selected_city %}border-slate-300 bg-white hover:border-brand-600{% else %}border-brand-600 bg-brand-600 text-white{% endif %}">All cities</a>
+    {% for city in cities %}
+      <a id="city-{{ city.slug }}"
+         href="{{ home_url }}?city={{ city.slug }}#hospitals"
+         hx-get="{{ home_url }}?city={{ city.slug }}"
+         {% if city == selected_city %}aria-current="true"{% endif %}
+         class="rounded-full border px-4 py-2 text-sm font-semibold transition {% if city == selected_city %}border-brand-600 bg-brand-600 text-white{% else %}border-slate-300 bg-white hover:border-brand-600{% endif %}">{{ city.name }}</a>
+    {% endfor %}
+  </nav>
+  <div class="grid gap-5 md:grid-cols-2">
+    {% for hospital in hospitals %}
+      <c-hospital-card :hospital="hospital" />
+    {% endfor %}
+  </div>
+</div>

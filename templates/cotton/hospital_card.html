@@ -1,0 +1,52 @@
+{% comment %}
+  A hospital with its current accreditations, for hospitals from
+  apps.providers.selectors.published_hospitals().
+  Usage: <c-hospital-card :hospital="hospital" />
+{% endcomment %}
+<c-vars hospital />
+<article class="flex overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+  <div class="w-2/5 shrink-0 bg-brand-50">
+    {% if hospital.image %}
+      <img src="{{ hospital.image.url }}"
+           alt="{{ hospital.name }}"
+           width="400"
+           height="300"
+           loading="lazy"
+           decoding="async"
+           class="h-full w-full object-cover">
+    {% else %}
+      <div class="grid h-full min-h-36 place-items-center text-brand-300">
+        <c-icon name="hospital" class="size-10" />
+      </div>
+    {% endif %}
+  </div>
+  <div class="flex min-w-0 flex-1 flex-col p-5">
+    {% if hospital.current_accreditations %}
+      <div class="flex flex-wrap gap-1.5">
+        {% for record in hospital.current_accreditations %}
+          <c-badge variant="verified">
+            {{ record.accreditation.abbreviation }}
+          </c-badge>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <h3 class="mt-3 font-bold">
+      <a href="{{ hospital.get_absolute_url }}" class="hover:text-brand-700">{{ hospital.name }}</a>
+    </h3>
+    <p class="mt-1 flex items-center gap-1 text-sm text-slate-600">
+      <c-icon name="map-pin" class="size-4 shrink-0" />
+      {{ hospital.city.name }}
+    </p>
+    {% if hospital.bed_count or hospital.established_year %}
+      <p class="mt-1 text-sm text-slate-600">
+        {% if hospital.bed_count %}{{ hospital.bed_count }} beds{% endif %}
+        {% if hospital.bed_count and hospital.established_year %}·{% endif %}
+        {% if hospital.established_year %}Est. {{ hospital.established_year }}{% endif %}
+      </p>
+    {% endif %}
+    <p class="mt-auto pt-4">
+      <a href="{{ hospital.get_absolute_url }}"
+         class="text-sm font-semibold text-brand-700 hover:underline">View hospital <span aria-hidden="true">→</span></a>
+    </p>
+  </div>
+</article>

@@ -6,6 +6,9 @@ from model_bakery import baker
 
 from apps.providers.models import HospitalAccreditation
 from apps.providers.selectors import (
+    cities_with_hospitals,
+    doctors_by_experience,
+    hospitals_in_city,
     published_doctors,
     published_hospitals,
     search_doctors,
@@ -112,3 +115,33 @@ def test_search_with_nothing_searchable_returns_nothing():
 
     assert list(search_hospitals("!!")) == []
     assert list(search_doctors("!!")) == []
+
+
+def test_cities_with_hospitals_lists_busiest_cities_first():
+    small = baker.make_recipe("apps.locations.tests.city", name="Kochi")
+    big = baker.make_recipe("apps.locations.tests.city", name="Chennai")
+    empty = baker.make_recipe("apps.locations.tests.city", name="Pune")
+    make_hospital(city=small)
+    make_hospital(city=big, _quantity=2)
+    make_hospital(city=empty, is_published=False)
+
+    assert list(cities_with_hospitals()) == [big, small]
+
+
+def test_hospitals_in_city_filters_by_city_and_lists_largest_first():
+    chennai = baker.make_recipe("apps.locations.tests.city")
+    large = make_hospital(city=chennai, bed_count=900)
+    unknown_size = make_hospital(city=chennai, bed_count=None)
+    small = make_hospital(city=chennai, bed_count=150)
+    elsewhere = make_hospital(bed_count=1000)
+
+    assert list(hospitals_in_city(chennai)) == [large, small, unknown_size]
+    assert hospitals_in_city(None).first() == elsewhere
+
+
+def test_doctors_by_experience_lists_longest_in_practice_first():
+    junior = make_doctor(practising_since=2015)
+    unknown = make_doctor(practising_since=None)
+    senior = make_doctor(practising_since=1990)
+
+    assert list(doctors_by_experience()) == [senior, junior, unknown]

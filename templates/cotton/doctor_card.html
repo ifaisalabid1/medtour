@@ -1,0 +1,61 @@
+{% comment %}
+  A doctor, for doctors from apps.providers.selectors.published_doctors().
+  The registration number is internal: only the fact that the team verified
+  it is shown.
+  Usage: <c-doctor-card :doctor="doctor" />
+{% endcomment %}
+<c-vars doctor />
+{% url 'website:home' as home_url %}
+<article class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+  <div class="aspect-square bg-brand-50">
+    {% if doctor.photo %}
+      <img src="{{ doctor.photo.url }}"
+           alt="{{ doctor }}"
+           width="400"
+           height="400"
+           loading="lazy"
+           decoding="async"
+           class="h-full w-full object-cover">
+    {% else %}
+      <div class="grid h-full place-items-center text-brand-300">
+        <c-icon name="stethoscope" class="size-12" />
+      </div>
+    {% endif %}
+  </div>
+  <div class="flex flex-1 flex-col p-5">
+    <h3 class="font-bold">
+      <a href="{{ doctor.get_absolute_url }}" class="hover:text-brand-700">{{ doctor }}</a>
+    </h3>
+    {% if doctor.public_specialities %}
+      <p class="mt-1 text-sm font-semibold text-brand-700">{{ doctor.public_specialities.0.name }}</p>
+    {% endif %}
+    {% if doctor.designation %}<p class="mt-1 text-sm text-slate-600">{{ doctor.designation }}</p>{% endif %}
+    {% if doctor.public_hospitals %}
+      <p class="mt-1 text-sm text-slate-600">
+        {{ doctor.public_hospitals.0.name }}, {{ doctor.public_hospitals.0.city.name }}
+      </p>
+    {% endif %}
+    {% if doctor.years_of_experience or doctor.registration_verified_on %}
+      <div class="mt-3 flex flex-wrap gap-1.5">
+        {% if doctor.years_of_experience %}
+          <c-badge>
+            {{ doctor.years_of_experience }} years in practice
+          </c-badge>
+        {% endif %}
+        {% if doctor.registration_verified_on %}
+          <c-badge variant="verified">
+            Registration verified
+          </c-badge>
+        {% endif %}
+      </div>
+    {% endif %}
+    <div class="mt-auto pt-5">
+      <c-button href="{{ home_url }}#enquire"
+                variant="outline"
+                size="sm"
+                class="w-full">
+        Request opinion
+      </c-button>
+    </div>
+  </div>
+</article>

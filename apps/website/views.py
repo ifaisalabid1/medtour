@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.http import require_GET
+from django.views.decorators.vary import vary_on_headers
 
 from apps.catalog.selectors import (
     published_conditions,
@@ -25,9 +26,11 @@ from apps.content.selectors import (
     faqs_for_condition,
     faqs_for_treatment,
     published_articles,
+    published_testimonials,
     testimonials_for_treatment,
     testimonials_from_country,
 )
+from apps.core.htmx import is_partial_request
 from apps.core.redirects import get_object_or_redirect
 from apps.locations.selectors import published_source_countries
 from apps.pricing.models import DisplayCurrency
@@ -40,9 +43,12 @@ from apps.pricing.selectors import (
     with_starting_price,
 )
 from apps.providers.selectors import (
+    cities_with_hospitals,
     doctors_at_hospital,
+    doctors_by_experience,
     doctors_for_speciality,
     hospitals_for_speciality,
+    hospitals_in_city,
     published_doctors,
     published_hospitals,
 )
@@ -60,9 +66,21 @@ HOME_DESCRIPTION = (
 HOME_SPECIALITIES = 8
 HOME_TREATMENTS = 6
 HERO_HOSPITALS = 3
+HOME_CITIES = 7
+HOME_HOSPITALS = 4
+HOME_DOCTORS = 4
+HOME_STORIES = 2
+HOME_GUIDES = 3
 
 
+# The city filter asks for just the hospitals panel; caches must keep that
+# fragment apart from the full page at the same URL.
+@vary_on_headers("HX-Request", "HX-Request-Type")
 def home(request):
+    hospitals_panel = _hospitals_panel(request.GET.get("city"))
+    if is_partial_request(request):
+        return render(request, "website/home/hospitals_panel.html", hospitals_panel)
+
     treatments = list(treatments_with_prices()[:HOME_TREATMENTS])
     # The hero card compares hospitals for the treatment with the most prices.
     hero_treatment = treatments[0] if treatments else None
@@ -81,9 +99,25 @@ def home(request):
             "hero_treatment": hero_treatment,
             "hero_packages": hero_packages,
             "usd_rate": current_inr_per_unit(DisplayCurrency.USD),
+            **hospitals_panel,
+            "doctors": doctors_by_experience()[:HOME_DOCTORS],
+            "stories": published_testimonials()[:HOME_STORIES],
+            "countries": published_source_countries(),
+            "guides": published_articles()[:HOME_GUIDES],
             "structured_data": [schema.organization(), schema.website()],
         },
     )
+
+
+def _hospitals_panel(city_slug: str | None) -> dict:
+    """Context for the hospitals panel, filtered to one city if it's a choice."""
+    cities = list(cities_with_hospitals()[:HOME_CITIES])
+    city = next((c for c in cities if c.slug == city_slug), None)
+    return {
+        "cities": cities,
+        "selected_city": city,
+        "hospitals": hospitals_in_city(city)[:HOME_HOSPITALS],
+    }
 
 
 def speciality_detail(request, slug):

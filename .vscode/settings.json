@@ -9,6 +9,8 @@
     "editor.formatOnSave": true
   },
   "djlint.useVenv": true,
+  "djlint.useEditorIndentation": false,
+  "djlint.configuration": "pyproject.toml",
   "emmet.includeLanguages": { "django-html": "html" },
   "tailwindCSS.includeLanguages": { "django-html": "html" }
 }

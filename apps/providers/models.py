@@ -2,6 +2,7 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import Q
 from django.db.models.functions import Lower
 from django.urls import reverse
 from django.utils import timezone
@@ -222,6 +223,15 @@ class Doctor(TimeStampedModel, PublishableModel):
         blank=True,
         help_text=_("NMC or state medical council registration. Internal only."),
     )
+    registration_verified_on = models.DateField(
+        _("registration verified on"),
+        null=True,
+        blank=True,
+        help_text=_(
+            "Date the team checked the number on the NMC or state medical council "
+            'register. The site shows "Registration verified" only when this is set.'
+        ),
+    )
     summary = models.CharField(
         _("summary"), max_length=300, blank=True, help_text=SUMMARY_HELP_TEXT
     )
@@ -259,6 +269,16 @@ class Doctor(TimeStampedModel, PublishableModel):
         ordering = ["name"]
         indexes = [
             GinIndex(fields=["search_vector"], name="providers_doctor_search_idx"),
+        ]
+        constraints = [
+            models.CheckConstraint(
+                condition=Q(registration_verified_on__isnull=True)
+                | ~Q(medical_registration_number=""),
+                name="providers_doctor_verified_registration_has_number",
+                violation_error_message=_(
+                    "Enter the registration number before marking it verified."
+                ),
+            ),
         ]
 
     def __str__(self):

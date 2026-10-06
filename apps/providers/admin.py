@@ -77,6 +77,7 @@ class DoctorAdmin(ModelAdmin):
                     "qualifications",
                     "practising_since",
                     "medical_registration_number",
+                    "registration_verified_on",
                 )
             },
         ),

@@ -1,0 +1,11 @@
+{% if doctors %}
+  <section id="doctors"
+           class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <c-section-heading eyebrow="Top doctors" title="Meet senior specialists" />
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {% for doctor in doctors %}
+        <c-doctor-card :doctor="doctor" />
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}

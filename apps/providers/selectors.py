@@ -1,10 +1,12 @@
 from django.contrib.postgres.search import SearchRank
-from django.db.models import F, Prefetch, Q, QuerySet
+from django.db.models import Count, F, Prefetch, Q, QuerySet
 from django.utils import timezone
 
 from apps.catalog.models import Speciality
 from apps.catalog.selectors import published_specialities
 from apps.core.search import build_prefix_search_query
+from apps.locations.models import City
+from apps.locations.selectors import published_cities
 
 from .models import Doctor, Hospital, HospitalAccreditation
 
@@ -87,3 +89,30 @@ def doctors_for_speciality(speciality: Speciality) -> QuerySet[Doctor]:
 
 def doctors_at_hospital(hospital: Hospital) -> QuerySet[Doctor]:
     return published_doctors().filter(hospitals=hospital)
+
+
+def cities_with_hospitals() -> QuerySet[City]:
+    """Published cities with at least one public hospital, most hospitals first."""
+    return (
+        published_cities()
+        .annotate(
+            hospital_count=Count("hospitals", filter=Q(hospitals__is_published=True))
+        )
+        .filter(hospital_count__gt=0)
+        .order_by("-hospital_count", "name")
+    )
+
+
+def hospitals_in_city(city: City | None) -> QuerySet[Hospital]:
+    """Public hospitals, largest first; in every city when `city` is None."""
+    hospitals = published_hospitals()
+    if city is not None:
+        hospitals = hospitals.filter(city=city)
+    return hospitals.order_by(F("bed_count").desc(nulls_last=True), "name")
+
+
+def doctors_by_experience() -> QuerySet[Doctor]:
+    """Public doctors, longest in practice first."""
+    return published_doctors().order_by(
+        F("practising_since").asc(nulls_last=True), "name"
+    )

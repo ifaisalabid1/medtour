@@ -1,0 +1,18 @@
+{% comment %}
+  One question and answer, as a native <details> element: accessible and
+  keyboard-friendly with no JavaScript. Items sharing a `group` name open one
+  at a time.
+  Usage: <c-faq-item group="home-faq" question="Who sees my reports?">Answer…</c-faq-item>
+{% endcomment %}
+<c-vars question="" group="" :open="False" />
+<details {% if group %}name="{{ group }}"{% endif %}
+         {% if open %}open{% endif %}
+         class="group rounded-2xl border border-slate-200 bg-white open:shadow-sm">
+  <summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 font-semibold [&::-webkit-details-marker]:hidden">
+    {{ question }}
+    <span class="grid size-7 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-700 transition-transform group-open:rotate-45">
+      <c-icon name="plus" class="size-4" />
+    </span>
+  </summary>
+  <div class="px-5 pb-5 leading-relaxed text-slate-600">{{ slot }}</div>
+</details>
