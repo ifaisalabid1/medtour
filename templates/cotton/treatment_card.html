@@ -1,0 +1,50 @@
+{% comment %}
+  A treatment with its price range, for treatments from
+  apps.pricing.selectors.treatments_with_prices().
+  Usage: <c-treatment-card :treatment="treatment" :usd_rate="usd_rate" />
+{% endcomment %}
+{% load money %}
+<c-vars treatment usd_rate />
+{% url 'website:home' as home_url %}
+<article class="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+  <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+    <c-badge variant="brand">{{ treatment.speciality.name }}</c-badge>
+    {% if treatment.prices_updated_on %}
+      <span class="text-slate-600">Updated {{ treatment.prices_updated_on|date:"j M Y" }}</span>
+    {% endif %}
+  </div>
+
+  <h3 class="mt-4 text-lg font-bold">
+    <a href="{{ treatment.get_absolute_url }}" class="hover:text-brand-700">{{ treatment.name }}</a>
+  </h3>
+
+  <p class="mt-4 text-sm text-slate-600">Starting from</p>
+  <p class="text-3xl font-extrabold tracking-tight text-brand-700">{{ treatment.price_from_inr|inr }}</p>
+  <p class="mt-1 text-sm text-slate-600">
+    {% with in_usd=treatment.price_from_inr|usd:usd_rate %}{% if in_usd %}≈ {{ in_usd }} · {% endif %}{% endwith %}up to {{ treatment.price_to_inr|inr }}
+  </p>
+
+  {% if treatment.hospital_stay_days or treatment.stay_in_india_days %}
+    <dl class="mt-5 grid grid-cols-2 gap-4 rounded-xl bg-slate-50 p-4 text-sm">
+      {% if treatment.hospital_stay_days %}
+        <div>
+          <dt class="text-slate-600">Hospital stay</dt>
+          <dd class="font-semibold">{{ treatment.hospital_stay_days }} day{{ treatment.hospital_stay_days|pluralize }}</dd>
+        </div>
+      {% endif %}
+      {% if treatment.stay_in_india_days %}
+        <div>
+          <dt class="text-slate-600">Stay in India</dt>
+          <dd class="font-semibold">{{ treatment.stay_in_india_days }} day{{ treatment.stay_in_india_days|pluralize }}</dd>
+        </div>
+      {% endif %}
+    </dl>
+  {% endif %}
+
+  <div class="mt-auto flex items-center justify-between gap-3 pt-6">
+    <a href="{{ treatment.get_absolute_url }}" class="text-sm font-semibold text-brand-700 hover:underline">
+      {{ treatment.hospital_count }} hospital{{ treatment.hospital_count|pluralize }} <span aria-hidden="true">→</span>
+    </a>
+    <c-button href="{{ home_url }}#enquire" size="sm">Get quote</c-button>
+  </div>
+</article>

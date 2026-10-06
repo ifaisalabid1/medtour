@@ -1,8 +1,14 @@
 import re
+from pathlib import Path
 
+import pytest
 from django.contrib.staticfiles import finders
 from django.test import override_settings
 from django.urls import reverse
+
+from apps.catalog.models import SpecialityIcon
+
+pytestmark = pytest.mark.django_db
 
 
 def test_home_page_renders_the_site_layout(client):
@@ -36,9 +42,18 @@ def test_public_pages_load_only_local_scripts(client):
 def test_every_static_file_the_layout_links_to_exists(client):
     """Catches a renamed or missing vendored file before the browser does."""
     response = client.get(reverse("website:home"))
-    paths = re.findall(r'(?:src|href)="/static/([^"]+)"', response.content.decode())
+    # Stop at "#": icons link to a symbol inside the sprite, e.g. icons.svg#phone.
+    paths = re.findall(r'(?:src|href)="/static/([^"#]+)', response.content.decode())
 
     assert paths
     for path in paths:
         if path != "css/site.css":  # built by Tailwind, not committed
             assert finders.find(path), f"static/{path} is missing"
+
+
+def test_every_speciality_icon_is_in_the_sprite():
+    """Editors pick from SpecialityIcon, so each choice needs a symbol."""
+    sprite = Path(finders.find("img/icons.svg")).read_text(encoding="utf-8")
+    symbols = set(re.findall(r'<symbol id="([\w-]+)"', sprite))
+
+    assert set(SpecialityIcon.values) <= symbols

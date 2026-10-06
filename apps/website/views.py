@@ -30,10 +30,13 @@ from apps.content.selectors import (
 )
 from apps.core.redirects import get_object_or_redirect
 from apps.locations.selectors import published_source_countries
+from apps.pricing.models import DisplayCurrency
 from apps.pricing.selectors import (
     cost_summary,
+    current_inr_per_unit,
     packages_at_hospital,
     packages_for_treatment,
+    treatments_with_prices,
     with_starting_price,
 )
 from apps.providers.selectors import (
@@ -50,10 +53,37 @@ from .seo import is_indexable, meta_description
 FEATURED_LIMIT = 12
 HOME = ("Home", "/")
 
+HOME_DESCRIPTION = (
+    "Compare accredited hospitals, verified doctors and dated treatment prices "
+    "in India. Get written opinions and quotes by email or WhatsApp."
+)
+HOME_SPECIALITIES = 8
+HOME_TREATMENTS = 6
+HERO_HOSPITALS = 3
+
 
 def home(request):
-    """The homepage. Its sections are filled in the next step."""
-    return render(request, "website/home.html")
+    treatments = list(treatments_with_prices()[:HOME_TREATMENTS])
+    # The hero card compares hospitals for the treatment with the most prices.
+    hero_treatment = treatments[0] if treatments else None
+    hero_packages = (
+        packages_for_treatment(hero_treatment)[:HERO_HOSPITALS]
+        if hero_treatment
+        else []
+    )
+    return render(
+        request,
+        "website/home.html",
+        {
+            "meta_description": HOME_DESCRIPTION,
+            "specialities": published_specialities()[:HOME_SPECIALITIES],
+            "treatments": treatments,
+            "hero_treatment": hero_treatment,
+            "hero_packages": hero_packages,
+            "usd_rate": current_inr_per_unit(DisplayCurrency.USD),
+            "structured_data": [schema.organization(), schema.website()],
+        },
+    )
 
 
 def speciality_detail(request, slug):

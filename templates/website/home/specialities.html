@@ -1,0 +1,18 @@
+{% if specialities %}
+  <section id="specialities" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <c-section-heading eyebrow="Specialities" title="Find care by speciality" />
+    <ul class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+      {% for speciality in specialities %}
+        <li>
+          <a href="{{ speciality.get_absolute_url }}"
+             class="group flex h-full flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center transition hover:border-brand-300 hover:bg-white hover:shadow-md">
+            <span class="grid size-12 place-items-center rounded-full bg-white text-brand-600 shadow-sm ring-1 ring-slate-200 transition group-hover:bg-brand-600 group-hover:text-white">
+              <c-icon :name="speciality.icon" class="size-6" />
+            </span>
+            <span class="text-sm font-semibold">{{ speciality.name }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endif %}

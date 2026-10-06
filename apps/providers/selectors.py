@@ -9,11 +9,15 @@ from apps.core.search import build_prefix_search_query
 from .models import Doctor, Hospital, HospitalAccreditation
 
 
-def _current_accreditations() -> Prefetch:
-    """Accreditations that haven't expired, as `hospital.current_accreditations`."""
+def current_accreditations(prefix: str = "") -> Prefetch:
+    """Accreditations that haven't expired, as `hospital.current_accreditations`.
+
+    `prefix` reaches hospitals through a relation, e.g. "hospital__" to load
+    them for the hospitals of a list of packages.
+    """
     today = timezone.localdate()
     return Prefetch(
-        "accreditation_records",
+        f"{prefix}accreditation_records",
         queryset=HospitalAccreditation.objects.filter(
             Q(valid_until__isnull=True) | Q(valid_until__gte=today)
         ).select_related("accreditation"),
@@ -27,7 +31,7 @@ def published_hospitals() -> QuerySet[Hospital]:
         Hospital.objects.published()
         .filter(city__is_published=True)
         .select_related("city")
-        .prefetch_related(_current_accreditations())
+        .prefetch_related(current_accreditations())
     )
 
 

@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import date, timedelta
 from decimal import Decimal
 
 import pytest
@@ -12,6 +12,7 @@ from apps.pricing.selectors import (
     cost_summary,
     current_inr_per_unit,
     packages_for_treatment,
+    treatments_with_prices,
     with_starting_price,
 )
 
@@ -100,3 +101,51 @@ def test_stale_or_missing_rates_are_not_used():
 
     assert current_inr_per_unit("USD") is None
     assert current_inr_per_unit("EUR") is None
+
+
+def test_treatments_with_prices_summarise_each_treatment(treatment):
+    make_package(
+        treatment,
+        price_min_inr=200_000,
+        price_max_inr=300_000,
+        price_updated_on=date(2026, 9, 1),
+    )
+    make_package(treatment, price_min_inr=350_000, price_updated_on=date(2026, 10, 1))
+    make_package(treatment, price_min_inr=100_000, is_published=False)
+
+    summary = treatments_with_prices().get()
+
+    assert summary.price_from_inr == 200_000
+    assert summary.price_to_inr == 350_000  # a single price counts as its own maximum
+    assert summary.hospital_count == 2
+    assert summary.prices_updated_on == date(2026, 10, 1)
+
+
+def test_treatments_with_prices_skip_unpriced_treatments_and_list_widest_first():
+    unpriced = baker.make_recipe("apps.catalog.tests.treatment")
+    one_hospital = baker.make_recipe("apps.catalog.tests.treatment")
+    two_hospitals = baker.make_recipe("apps.catalog.tests.treatment")
+    make_package(one_hospital)
+    make_package(two_hospitals)
+    make_package(two_hospitals)
+
+    treatments = list(treatments_with_prices())
+
+    assert treatments == [two_hospitals, one_hospital]
+    assert unpriced not in treatments
+
+
+def test_package_hospitals_come_with_current_accreditations(
+    treatment, django_assert_num_queries
+):
+    for _ in range(3):
+        package = make_package(treatment)
+        baker.make(
+            "providers.HospitalAccreditation",
+            hospital=package.hospital,
+            accreditation=baker.make_recipe("apps.providers.tests.accreditation"),
+        )
+
+    with django_assert_num_queries(2):  # packages, then all their accreditations
+        packages = list(packages_for_treatment(treatment))
+        assert all(len(p.hospital.current_accreditations) == 1 for p in packages)

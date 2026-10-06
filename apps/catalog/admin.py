@@ -17,7 +17,7 @@ class SpecialityAdmin(ModelAdmin):
     readonly_fields = ("created_at", "updated_at")
     fieldsets = (
         (None, {"fields": ("name", "slug", "display_order", "is_published")}),
-        (_("Content"), {"fields": ("summary", "description")}),
+        (_("Content"), {"fields": ("icon", "summary", "description")}),
         TIMESTAMPS_FIELDSET,
     )
 

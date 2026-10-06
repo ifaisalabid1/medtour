@@ -24,6 +24,22 @@ def catalog_search_vector():
     )
 
 
+class SpecialityIcon(models.TextChoices):
+    """Icons editors can pick for a speciality. Each is a symbol in
+    static/img/icons.svg, so adding one means adding it there too."""
+
+    STETHOSCOPE = "stethoscope", _("Stethoscope (general)")
+    HEART = "heart-pulse", _("Heart (cardiology)")
+    BONE = "bone", _("Bone (orthopaedics)")
+    RIBBON = "ribbon", _("Ribbon (oncology)")
+    BRAIN = "brain", _("Brain (neurology, neurosurgery)")
+    BABY = "baby", _("Baby (fertility, paediatrics)")
+    EYE = "eye", _("Eye (ophthalmology)")
+    EAR = "ear", _("Ear (ENT)")
+    SMILE = "smile", _("Smile (dental)")
+    PULSE = "activity", _("Pulse (other)")
+
+
 class Speciality(TimeStampedModel, PublishableModel):
     name = models.CharField(_("name"), max_length=100)
     slug = models.SlugField(
@@ -33,6 +49,12 @@ class Speciality(TimeStampedModel, PublishableModel):
         _("summary"), max_length=300, blank=True, help_text=SUMMARY_HELP_TEXT
     )
     description = RichTextField(_("description"), blank=True)
+    icon = models.CharField(
+        _("icon"),
+        max_length=20,
+        choices=SpecialityIcon.choices,
+        default=SpecialityIcon.STETHOSCOPE,
+    )
     display_order = models.PositiveSmallIntegerField(
         _("display order"), default=0, help_text=_("Lower numbers appear first.")
     )

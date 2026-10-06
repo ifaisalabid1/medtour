@@ -120,3 +120,20 @@ def test_article_names_its_medical_reviewer_and_review_date():
     assert data["reviewedBy"] == {"@type": "Person", "name": "Dr. Meera Iyer"}
     assert data["lastReviewed"] == timezone.localdate().isoformat()
     assert data["datePublished"] == article.published_at.isoformat()
+
+
+def test_organization_and_website_name_the_site(settings):
+    settings.SITE_NAME = "Medtour"
+    settings.CONTACT_EMAIL = "care@medtour.example"
+
+    organization = schema.organization()
+
+    assert organization["@type"] == "Organization"
+    assert organization["url"] == f"{SITE}/"
+    assert organization["email"] == "care@medtour.example"
+    assert schema.website() == {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Medtour",
+        "url": f"{SITE}/",
+    }

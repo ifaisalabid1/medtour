@@ -1,0 +1,40 @@
+{% load static %}
+<section class="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8 lg:py-24">
+  {# Stock photo of a generic scene (see static/img/CREDITS.md): never captioned as one of our doctors. #}
+  <img src="{% static 'img/home/doctor-and-patient.webp' %}" alt="A doctor talking with a patient in a clinic"
+       width="1000" height="750" loading="lazy" decoding="async"
+       class="aspect-4/3 w-full rounded-3xl object-cover shadow-lg">
+  <div>
+    <c-section-heading eyebrow="Why {{ SITE_NAME }}" title="Everything you need to decide, before you travel" />
+    <ul class="space-y-6">
+      <li class="flex gap-4">
+        <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-600 text-white"><c-icon name="receipt-text" /></span>
+        <div>
+          <p class="font-semibold">Prices you can compare</p>
+          <p class="mt-1 text-slate-600">Package ranges from each hospital, with what is included and the date each price was confirmed.</p>
+        </div>
+      </li>
+      <li class="flex gap-4">
+        <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-600 text-white"><c-icon name="shield-check" /></span>
+        <div>
+          <p class="font-semibold">Credentials on show</p>
+          <p class="mt-1 text-slate-600">Hospital accreditations with their validity dates, and doctors with verified medical registrations.</p>
+        </div>
+      </li>
+      <li class="flex gap-4">
+        <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-600 text-white"><c-icon name="whatsapp" /></span>
+        <div>
+          <p class="font-semibold">One coordinator, on WhatsApp</p>
+          <p class="mt-1 text-slate-600">A single reference number follows your case from the first message to follow-up care.</p>
+        </div>
+      </li>
+      <li class="flex gap-4">
+        <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-600 text-white"><c-icon name="lock" /></span>
+        <div>
+          <p class="font-semibold">Your reports stay private</p>
+          <p class="mt-1 text-slate-600">Shared only with the hospitals you approve. You can withdraw your consent at any time.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>

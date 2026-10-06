@@ -7,7 +7,9 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone
 
 from apps.catalog.models import Treatment
+from apps.catalog.selectors import published_treatments
 from apps.providers.models import Hospital
+from apps.providers.selectors import current_accreditations
 
 from .models import ExchangeRate, TreatmentPackage
 
@@ -40,6 +42,7 @@ def packages_for_treatment(treatment: Treatment) -> QuerySet[TreatmentPackage]:
         published_packages()
         .filter(treatment=treatment)
         .select_related("hospital__city")
+        .prefetch_related(current_accreditations("hospital__"))
         .order_by("price_min_inr", "hospital__name")
     )
 
@@ -69,6 +72,38 @@ def with_starting_price(treatments: QuerySet[Treatment]) -> QuerySet[Treatment]:
         .values("price_min_inr")[:1]
     )
     return treatments.annotate(starting_price_inr=Subquery(cheapest))
+
+
+def treatments_with_prices() -> QuerySet[Treatment]:
+    """Published treatments with at least one public price, most hospitals first.
+
+    Each treatment gets `price_from_inr`, `price_to_inr`, `hospital_count` and
+    `prices_updated_on` (the most recent confirmation), for cards such as
+    "from ₹2,50,000, up to ₹4,50,000, at 6 hospitals, updated 3 Oct".
+    """
+    # One row per treatment: order_by() drops the model's default ordering,
+    # which would otherwise split the GROUP BY.
+    packages = (
+        published_packages()
+        .filter(treatment=OuterRef("pk"))
+        .order_by()
+        .values("treatment")
+    )
+
+    def per_treatment(aggregate):
+        return Subquery(packages.annotate(value=aggregate).values("value"))
+
+    return (
+        published_treatments()
+        .annotate(
+            price_from_inr=per_treatment(Min("price_min_inr")),
+            price_to_inr=per_treatment(Max(Coalesce("price_max_inr", "price_min_inr"))),
+            hospital_count=per_treatment(Count("hospital", distinct=True)),
+            prices_updated_on=per_treatment(Max("price_updated_on")),
+        )
+        .filter(hospital_count__gt=0)
+        .order_by("-hospital_count", "name")
+    )
 
 
 def current_inr_per_unit(currency: str) -> Decimal | None:

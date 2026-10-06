@@ -1,22 +1,13 @@
 {% comment %}
-  Inline SVG icons (paths from Lucide, ISC licence). Decorative by default:
-  pass label="..." when the icon is the only content of a link or button.
+  An icon from the sprite in static/img/icons.svg (one cached file for every icon).
+  Decorative by default: pass label="..." when the icon is the only content of
+  a link or button.
   Usage: <c-icon name="phone" class="size-4" />
 {% endcomment %}
+{% load static %}
 <c-vars name="" class="size-5" label="" />
-<svg class="{{ class }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+<svg class="{{ class }}" fill="none" stroke="currentColor" stroke-width="2"
      stroke-linecap="round" stroke-linejoin="round"
      {% if label %}role="img" aria-label="{{ label }}"{% else %}aria-hidden="true"{% endif %} {{ attrs }}>
-  {% if name == "phone" %}<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.910a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
-  {% elif name == "whatsapp" %}<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/>
-  {% elif name == "arrow-right" %}<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-  {% elif name == "menu" %}<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/>
-  {% elif name == "x" %}<path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-  {% elif name == "check" %}<path d="M20 6 9 17l-5-5"/>
-  {% elif name == "shield-check" %}<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>
-  {% elif name == "map-pin" %}<path d="M20 10c0 4.99-5.54 10.19-7.4 11.8a1 1 0 0 1-1.2 0C9.54 20.19 4 14.99 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>
-  {% elif name == "search" %}<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-  {% elif name == "lock" %}<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-  {% elif name == "plus" %}<path d="M5 12h14"/><path d="M12 5v14"/>
-  {% endif %}
+  <use href="{% static 'img/icons.svg' %}#{{ name }}"></use>
 </svg>

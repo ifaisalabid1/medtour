@@ -9,6 +9,7 @@
     {# One canonical address per page: no tracking parameters, no old slugs. #}
     <link rel="canonical" href="{{ SITE_URL }}{{ request.path }}">
     <meta name="theme-color" content="#0b5ed7">
+     <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
     <link rel="preload" href="{% static 'fonts/plus-jakarta-sans-latin-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
     {% tailwind_css %}
     {# Loading indicators are styled in tailwind.css, so htmx needn't inject its own CSS. #}

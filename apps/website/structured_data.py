@@ -44,6 +44,30 @@ def breadcrumbs(*crumbs: tuple[str, str]) -> dict:
     }
 
 
+def organization() -> dict:
+    """Who runs the site, with contact details (homepage only)."""
+    return _with_optional(
+        {
+            "@context": SCHEMA_CONTEXT,
+            "@type": "Organization",
+            "name": settings.SITE_NAME,
+            "url": absolute_url("/"),
+        },
+        email=settings.CONTACT_EMAIL,
+        telephone=settings.CONTACT_PHONE,
+    )
+
+
+def website() -> dict:
+    """The site's name, so search results show it instead of the domain."""
+    return {
+        "@context": SCHEMA_CONTEXT,
+        "@type": "WebSite",
+        "name": settings.SITE_NAME,
+        "url": absolute_url("/"),
+    }
+
+
 def medical_procedure(treatment) -> dict:
     return _with_optional(
         {

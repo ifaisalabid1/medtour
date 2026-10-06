@@ -1,0 +1,17 @@
+{% if treatments %}
+  <section id="treatments" class="bg-slate-50">
+    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <c-section-heading eyebrow="Treatment packages" title="Popular treatments and what they cost">
+        Starting prices from partner hospitals, with the date each price was last confirmed.
+      </c-section-heading>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {% for treatment in treatments %}
+          <c-treatment-card :treatment="treatment" :usd_rate="usd_rate" />
+        {% endfor %}
+      </div>
+      <p class="mt-8 text-sm text-slate-600">
+        Prices are indicative. Your final quote depends on your reports and the hospital you choose.
+      </p>
+    </div>
+  </section>
+{% endif %}
