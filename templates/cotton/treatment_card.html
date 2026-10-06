@@ -8,7 +8,9 @@
 {% url 'website:home' as home_url %}
 <article class="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
   <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
-    <c-badge variant="brand">{{ treatment.speciality.name }}</c-badge>
+    <c-badge variant="brand">
+      {{ treatment.speciality.name }}
+    </c-badge>
     {% if treatment.prices_updated_on %}
       <span class="text-slate-600">Updated {{ treatment.prices_updated_on|date:"j M Y" }}</span>
     {% endif %}
@@ -29,22 +31,29 @@
       {% if treatment.hospital_stay_days %}
         <div>
           <dt class="text-slate-600">Hospital stay</dt>
-          <dd class="font-semibold">{{ treatment.hospital_stay_days }} day{{ treatment.hospital_stay_days|pluralize }}</dd>
+          <dd class="font-semibold">
+            {{ treatment.hospital_stay_days }} day{{ treatment.hospital_stay_days|pluralize }}
+          </dd>
         </div>
       {% endif %}
       {% if treatment.stay_in_india_days %}
         <div>
           <dt class="text-slate-600">Stay in India</dt>
-          <dd class="font-semibold">{{ treatment.stay_in_india_days }} day{{ treatment.stay_in_india_days|pluralize }}</dd>
+          <dd class="font-semibold">
+            {{ treatment.stay_in_india_days }} day{{ treatment.stay_in_india_days|pluralize }}
+          </dd>
         </div>
       {% endif %}
     </dl>
   {% endif %}
 
   <div class="mt-auto flex items-center justify-between gap-3 pt-6">
-    <a href="{{ treatment.get_absolute_url }}" class="text-sm font-semibold text-brand-700 hover:underline">
+    <a href="{{ treatment.get_absolute_url }}"
+       class="text-sm font-semibold text-brand-700 hover:underline">
       {{ treatment.hospital_count }} hospital{{ treatment.hospital_count|pluralize }} <span aria-hidden="true">→</span>
     </a>
-    <c-button href="{{ home_url }}#enquire" size="sm">Get quote</c-button>
+    <c-button href="{{ home_url }}#enquire" size="sm">
+      Get quote
+    </c-button>
   </div>
 </article>

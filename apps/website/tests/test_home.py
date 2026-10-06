@@ -68,3 +68,11 @@ def test_home_page_query_count_does_not_grow_with_content(
     # Treatments, exchange rate, hero packages, their accreditations, specialities.
     with django_assert_num_queries(5):
         client.get(reverse("website:home"))
+
+
+def test_only_the_medical_opinion_card_is_highlighted(client):
+    """Guards cotton flags: an unquoted dark=False quoted by a formatter becomes
+    the string "False", which is truthy and darkens every card."""
+    content = client.get(reverse("website:home")).content.decode()
+
+    assert content.count("border-brand-950 bg-brand-950") == 1

@@ -1,8 +1,8 @@
 {% load ui %}
-<c-vars href="" variant="primary" size="md" class="" />
+<c-vars href="" variant="primary" size="md" class="" type="button" />
 {% button_classes variant size as classes %}
 {% if href %}
   <a href="{{ href }}" class="{{ classes }} {{ class }}" {{ attrs }}>{{ slot }}</a>
 {% else %}
-  <button class="{{ classes }} {{ class }}" {{ attrs }}>{{ slot }}</button>
+  <button type="{{ type }}" class="{{ classes }} {{ class }}" {{ attrs }}>{{ slot }}</button>
 {% endif %}

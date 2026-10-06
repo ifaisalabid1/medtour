@@ -6,8 +6,13 @@
 {% endcomment %}
 {% load static %}
 <c-vars name="" class="size-5" label="" />
-<svg class="{{ class }}" fill="none" stroke="currentColor" stroke-width="2"
-     stroke-linecap="round" stroke-linejoin="round"
-     {% if label %}role="img" aria-label="{{ label }}"{% else %}aria-hidden="true"{% endif %} {{ attrs }}>
+<svg class="{{ class }}"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="2"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     {% if label %}role="img" aria-label="{{ label }}"{% else %}aria-hidden="true"{% endif %}
+     {{ attrs }}>
   <use href="{% static 'img/icons.svg' %}#{{ name }}"></use>
 </svg>

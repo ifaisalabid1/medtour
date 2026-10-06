@@ -1,11 +1,17 @@
 {% url 'website:home' as home_url %}
 {# Always-visible contact on phones: most patients reach out from mobile. #}
 <div class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-3 border-t border-slate-200 bg-white/95 p-3 backdrop-blur md:hidden">
-  <c-button href="{{ WHATSAPP_URL }}" variant="whatsapp" rel="noopener"><c-icon name="whatsapp" class="size-4" /> WhatsApp</c-button>
-  <c-button href="{{ home_url }}#enquire">Get free quote</c-button>
+  <c-button href="{{ WHATSAPP_URL }}" variant="whatsapp" rel="noopener">
+    <c-icon name="whatsapp" class="size-4" />
+    WhatsApp
+  </c-button>
+  <c-button href="{{ home_url }}#enquire">
+    Get free quote
+  </c-button>
 </div>
 {# On larger screens, a floating WhatsApp button instead. #}
-<a href="{{ WHATSAPP_URL }}" rel="noopener"
+<a href="{{ WHATSAPP_URL }}"
+   rel="noopener"
    class="fixed bottom-6 right-6 z-40 hidden size-14 place-items-center rounded-full bg-[#25d366] text-slate-950 shadow-lg shadow-brand-950/20 transition-transform hover:scale-105 md:grid">
   <c-icon name="whatsapp" class="size-7" label="Chat with us on WhatsApp" />
 </a>

@@ -1,4 +1,14 @@
 {
   "files.trimFinalNewlines": true,
-  "files.insertFinalNewline": true
+  "files.insertFinalNewline": true,
+  "files.associations": {
+    "**/templates/**/*.html": "django-html"
+  },
+  "[django-html]": {
+    "editor.defaultFormatter": "monosans.djlint",
+    "editor.formatOnSave": true
+  },
+  "djlint.useVenv": true,
+  "emmet.includeLanguages": { "django-html": "html" },
+  "tailwindCSS.includeLanguages": { "django-html": "html" }
 }

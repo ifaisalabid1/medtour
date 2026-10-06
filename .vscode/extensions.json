@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "monosans.djlint",
+    "batisteo.vscode-django",
+    "twentyforty.django-cotton",
+    "bradlc.vscode-tailwindcss",
+    "charliermarsh.ruff"
+  ]
+}

@@ -2,10 +2,9 @@
   A large link with an icon, title and one line of text.
   Usage: <c-action-card href="#hospitals" icon="hospital" title="Find a hospital" text="Accredited, by city" />
 {% endcomment %}
-<c-vars href="" icon="" title="" text="" dark=False />
+<c-vars href="" icon="" title="" text="" :dark="False" />
 <a href="{{ href }}"
-   class="group flex h-full flex-col gap-4 rounded-2xl border p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:flex-row sm:items-center
-          {% if dark %}border-brand-950 bg-brand-950 text-white{% else %}border-slate-200 bg-white hover:border-brand-300{% endif %}">
+   class="group flex h-full flex-col gap-4 rounded-2xl border p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:flex-row sm:items-center {% if dark %}border-brand-950 bg-brand-950 text-white{% else %}border-slate-200 bg-white hover:border-brand-300{% endif %}">
   <span class="grid size-11 shrink-0 place-items-center rounded-xl {% if dark %}bg-brand-600 text-white{% else %}bg-brand-50 text-brand-700{% endif %}">
     <c-icon :name="icon" class="size-5" />
   </span>
