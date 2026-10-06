@@ -288,6 +288,15 @@ wheels = [
 ]
 
 [[package]]
+name = "click"
+version = "8.5.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c7/0e/7fa0ef50764b67090eca4114772a2abf8b6148198475e54c660b97caeee6/click-8.5.0.tar.gz", hash = "sha256:ba0d2089de75ea0310e2dde03160e6ca10009947fb95a182f9b54021bb272e34", size = 382235, upload-time = "2026-08-26T13:33:14.56Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/58/50/6c0d534c5f134586a8e1ba4e330569e32f057e33372ae556463212fb4cd3/click-8.5.0-py3-none-any.whl", hash = "sha256:255bc9599cf7748b4b1a446ccc735421bd08a2ae529a8b88597d3de5664ee360", size = 125251, upload-time = "2026-08-26T13:33:12.928Z" },
+]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 source = { registry = "https://pypi.org/simple" }
@@ -409,6 +418,30 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/f0/b4/00c701a22d46288e3eb1340a1c141f5b4002572ce836a3e8d069f1e1de8a/django_axes-8.3.1.tar.gz", hash = "sha256:d57e923c0ba33cf45275253dd1313c3a3ff04bec686b38d677beb2b3d43c7bcd", size = 254715, upload-time = "2026-02-11T20:19:52.172Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/46/f6/777a5df7d5698eeb23c7c496cc268c0181f0489dbc5b5f2b235b30e5d8dd/django_axes-8.3.1-py3-none-any.whl", hash = "sha256:f7887582fd12713064f1602091ff6152752becae5e891a15bf802746cab0f51a", size = 74213, upload-time = "2026-02-11T20:19:48.646Z" },
+]
+
+[[package]]
+name = "django-click"
+version = "2.5.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/fc/e9/80f860c3f2bb9bdcc58de6b9578bbc6b4a57bedefdc97211e736fb960380/django_click-2.5.0.tar.gz", hash = "sha256:60d346a04d0db991d0bb31754c0dcad282643aa26a4701ca5ff5df742a7473f8", size = 7251, upload-time = "2026-01-10T13:19:37.958Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/27/43/a8eedd594b0f1d5e736ad5afd48ff4431566d2760b79115af40d8b4e950a/django_click-2.5.0-py3-none-any.whl", hash = "sha256:6bcb71d0bac47f67b91d9ee1972d881d72b5bf20cd2a45a57265cdfac49b88aa", size = 7887, upload-time = "2026-01-10T13:19:37.13Z" },
+]
+
+[[package]]
+name = "django-cotton"
+version = "2.7.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/02/cd/5c467a1495b756f56246a6d8d36425517cd01bd3aa4bc6209a821f83ec74/django_cotton-2.7.2.tar.gz", hash = "sha256:7e050042873f724beaa5824e86d5034ced2f7de1c5478c3a9d8c053e05caa8ac", size = 33171, upload-time = "2026-06-01T22:52:00.314Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8b/9b/d75158f6280906befada54f9cb17c10d5e0eac078d8d2e189e2f90da0fc1/django_cotton-2.7.2-py3-none-any.whl", hash = "sha256:1b293037ead54ab228362654da00ededc5ca52b2ff407b6087a81cfd9390850e", size = 32084, upload-time = "2026-06-01T22:52:01.238Z" },
 ]
 
 [[package]]
@@ -549,6 +582,21 @@ wheels = [
 ]
 
 [[package]]
+name = "django-tailwind-cli"
+version = "4.8.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "django" },
+    { name = "django-click" },
+    { name = "semver" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b8/33/31713a0ffcdf9ebda53787bb5da44d8e741b80a200ccc55ee7f193221640/django_tailwind_cli-4.8.1.tar.gz", hash = "sha256:25f6362d64c19dd363d6a720eaf8cbfc1b05699190e9f73fb7c378138bc7675b", size = 165198, upload-time = "2026-09-18T12:49:32.667Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a2/61/f8317c8dcdc7f25741c7dfd81d1f376f4f29d587ae1d5cb97980fc4946cb/django_tailwind_cli-4.8.1-py3-none-any.whl", hash = "sha256:804268c985729582c4e633b176178b5aad104bcc1507fcaac8e6002f031b93ac", size = 50588, upload-time = "2026-09-18T12:49:31.016Z" },
+]
+
+[[package]]
 name = "django-tasks-db"
 version = "0.13.0"
 source = { registry = "https://pypi.org/simple" }
@@ -636,6 +684,7 @@ dependencies = [
     { name = "django", extra = ["argon2"] },
     { name = "django-anymail", extra = ["amazon-ses"] },
     { name = "django-axes" },
+    { name = "django-cotton" },
     { name = "django-countries" },
     { name = "django-environ" },
     { name = "django-health-check" },
@@ -643,6 +692,7 @@ dependencies = [
     { name = "django-prose-editor", extra = ["sanitize"] },
     { name = "django-simple-history" },
     { name = "django-storages", extra = ["s3"] },
+    { name = "django-tailwind-cli" },
     { name = "django-tasks-db" },
     { name = "django-unfold" },
     { name = "pillow" },
@@ -666,6 +716,7 @@ requires-dist = [
     { name = "django", extras = ["argon2"], specifier = ">=6.1.1" },
     { name = "django-anymail", extras = ["amazon-ses"], specifier = ">=15.2" },
     { name = "django-axes", specifier = ">=8.3.1" },
+    { name = "django-cotton", specifier = ">=2.7.2" },
     { name = "django-countries", specifier = ">=9.1.0" },
     { name = "django-environ", specifier = ">=0.14.0" },
     { name = "django-health-check", specifier = ">=4.8.0" },
@@ -673,6 +724,7 @@ requires-dist = [
     { name = "django-prose-editor", extras = ["sanitize"], specifier = ">=0.27.3" },
     { name = "django-simple-history", specifier = ">=3.13.0" },
     { name = "django-storages", extras = ["s3"], specifier = ">=1.14.6" },
+    { name = "django-tailwind-cli", specifier = ">=4.8.1" },
     { name = "django-tasks-db", specifier = ">=0.13.0" },
     { name = "django-unfold", specifier = ">=0.108.0" },
     { name = "pillow", specifier = ">=12.3.0" },
@@ -1055,6 +1107,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/76/43/35e4d8aa320bffe8287fe8f65f578fa2d2db0a64212f0e710dce58267854/s3transfer-0.19.2.tar.gz", hash = "sha256:ba0309fd86be3c27dbf78cdd813c13c5e1df16e5874b99d2535ebbdfb9892993", size = 165592, upload-time = "2026-07-22T19:30:44.432Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/bc/e7/5c595c75e9f41a44f30e526eda465ea0b4eec93470e074e4a111b253f13a/s3transfer-0.19.2-py3-none-any.whl", hash = "sha256:d8168eccca828cbb2cd573675333f3bddd254313a9c42494b84c76b539e8ba25", size = 90216, upload-time = "2026-07-22T19:30:43.251Z" },
+]
+
+[[package]]
+name = "semver"
+version = "3.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/92/f5/e1dfe8e1d91c54ce212fd93916eb01fd1c590f413be0a0978c39a97aa1bb/semver-3.1.0.tar.gz", hash = "sha256:14bc073439513d7773662a338f4db9829cf16c12b74b9568e2d2689975fbd7fc", size = 304162, upload-time = "2026-09-12T18:38:14.045Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/be/02/bce7a1d70e9d0f6ea8623c16386138c251b5855af6cd3a11433d3fba4e66/semver-3.1.0-py3-none-any.whl", hash = "sha256:6e4998f8b4762acdfea85f9bfd5b4032e0bb50038dc04bf82011b42d5d1145c5", size = 18783, upload-time = "2026-09-12T18:38:12.457Z" },
 ]
 
 [[package]]

@@ -51,6 +51,11 @@ FEATURED_LIMIT = 12
 HOME = ("Home", "/")
 
 
+def home(request):
+    """The homepage. Its sections are filled in the next step."""
+    return render(request, "website/home.html")
+
+
 def speciality_detail(request, slug):
     speciality = get_object_or_redirect(published_specialities(), slug)
     return render(

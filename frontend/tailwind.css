@@ -1,0 +1,99 @@
+/*
+ * Design system. Tailwind CSS v4 is configured here, in CSS.
+ * Build: `uv run python manage.py tailwind build` (or `tailwind runserver`).
+ */
+@import "tailwindcss";
+
+/* Tailwind scans these folders for the class names we use. */
+@source "../templates";
+@source "../apps";
+@source "../static/js";
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../fonts/plus-jakarta-sans-latin-wght-normal.woff2") format("woff2");
+}
+
+@theme {
+  --font-sans:
+    "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+
+  /*
+   * Brand blue: the classic, calm medical blue. Contrast (WCAG AA):
+   * - Buttons: white text on brand-600 (5.8:1), hover brand-700 (7.9:1).
+   * - Links and highlighted words: brand-600 or darker on white or brand-50.
+   * - Dark sections: brand-950 with white (15.7:1) or slate-300 (10.6:1) text.
+   * - brand-400 and lighter are for fills, borders and icons, never body text.
+   * Every colour is named "brand", so a future rebrand only changes this block.
+   */
+  --color-brand-50: #eef5ff;
+  --color-brand-100: #d9e8ff;
+  --color-brand-200: #bcd7ff;
+  --color-brand-300: #8ebdff;
+  --color-brand-400: #5998fc;
+  --color-brand-500: #2f74f0;
+  --color-brand-600: #0b5ed7;
+  --color-brand-700: #0a4cb0;
+  --color-brand-800: #0d3f8f;
+  --color-brand-900: #113773;
+  --color-brand-950: #0b2249;
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth antialiased;
+  }
+  body {
+    @apply bg-white font-sans text-slate-900;
+  }
+  /* Visible keyboard focus everywhere, in the brand colour. */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-600;
+  }
+  /* htmx loading indicators: hidden until their request is in flight. */
+  .htmx-indicator {
+    @apply invisible opacity-0 transition-opacity duration-200;
+  }
+  .htmx-request .htmx-indicator,
+  .htmx-request.htmx-indicator {
+    @apply visible opacity-100;
+  }
+  /* Hide Alpine-controlled elements until Alpine has started. */
+  [x-cloak] {
+    display: none !important;
+  }
+}
+
+/* Rich text written in the admin (descriptions, articles, FAQ answers). */
+@utility rich-text {
+  @apply space-y-4 leading-relaxed text-slate-700;
+  & h2 {
+    @apply pt-4 text-2xl font-bold text-slate-900;
+  }
+  & h3 {
+    @apply pt-2 text-xl font-semibold text-slate-900;
+  }
+  & a {
+    @apply font-medium text-brand-700 underline decoration-brand-300 decoration-2 underline-offset-4 hover:decoration-brand-700;
+  }
+  & ul {
+    @apply list-disc space-y-1 pl-6;
+  }
+  & ol {
+    @apply list-decimal space-y-1 pl-6;
+  }
+  & blockquote {
+    @apply border-l-4 border-brand-500 pl-4 italic;
+  }
+  & table {
+    @apply w-full text-left text-sm;
+  }
+  & th,
+  & td {
+    @apply border-b border-slate-200 py-2 pr-4;
+  }
+}

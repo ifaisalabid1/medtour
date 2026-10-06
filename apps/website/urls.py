@@ -8,6 +8,7 @@ app_name = "website"
 
 # Lowercase, hyphenated, keyword-first URLs, as the SEO plan recommends.
 urlpatterns = [
+    path("", views.home, name="home"),
     path(
         "treatments/<slug:slug>-cost-in-india/",
         views.treatment_detail,

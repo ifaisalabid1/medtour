@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Treatment in India with clear costs{% endblock %}
+{% block content %}
+  <section class="bg-linear-to-b from-brand-50 to-white">
+    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <c-badge variant="verified">JCI &amp; NABH accredited partner hospitals</c-badge>
+      <h1 class="mt-6 max-w-3xl text-5xl font-extrabold leading-tight tracking-tight md:text-6xl">
+        Trusted treatment in India, with <span class="text-brand-600">clear costs</span> from day one.
+      </h1>
+      <p class="mt-6 max-w-xl text-lg text-slate-600">
+        Compare hospitals, doctors and package prices. Get written opinions and quotes by email or WhatsApp.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <c-button href="#enquire" size="lg">Get free quote <c-icon name="arrow-right" class="size-4" /></c-button>
+        <c-button href="{{ WHATSAPP_URL }}" variant="outline" size="lg" rel="noopener"><c-icon name="whatsapp" class="size-4" /> Chat on WhatsApp</c-button>
+      </div>
+      <p class="mt-10 text-sm text-slate-600">The full homepage is built in the next step.</p>
+    </div>
+  </section>
+{% endblock %}

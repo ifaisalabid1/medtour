@@ -1,0 +1,40 @@
+{% url 'website:home' as home_url %}
+<footer class="bg-brand-950 text-slate-300">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-4 lg:px-8">
+    <div class="md:col-span-2">
+      <a href="{{ home_url }}" class="flex items-center gap-2 text-lg font-extrabold text-white">
+        <span class="grid size-9 place-items-center rounded-xl bg-brand-600 text-white"><c-icon name="plus" class="size-5" /></span>
+        {{ SITE_NAME }}
+      </a>
+      <p class="mt-4 max-w-sm text-sm leading-relaxed">
+        We help patients from India and abroad compare accredited hospitals, verified doctors and dated treatment prices, and plan their care.
+      </p>
+      <p class="mt-4 text-sm">
+        <a href="tel:{{ CONTACT_PHONE|cut:' ' }}" class="hover:text-white">{{ CONTACT_PHONE }}</a> ·
+        <a href="mailto:{{ CONTACT_EMAIL }}" class="hover:text-white">{{ CONTACT_EMAIL }}</a>
+      </p>
+    </div>
+    <div>
+      <p class="text-sm font-semibold text-white">Find care</p>
+      <ul class="mt-4 space-y-2 text-sm">
+        <li><a href="{{ home_url }}#treatments" class="hover:text-white">Treatment costs</a></li>
+        <li><a href="{{ home_url }}#hospitals" class="hover:text-white">Hospitals</a></li>
+        <li><a href="{{ home_url }}#doctors" class="hover:text-white">Doctors</a></li>
+        <li><a href="{{ home_url }}#guides" class="hover:text-white">Patient guides</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="text-sm font-semibold text-white">Talk to us</p>
+      <ul class="mt-4 space-y-2 text-sm">
+        <li><a href="{{ WHATSAPP_URL }}" class="hover:text-white" rel="noopener">WhatsApp</a></li>
+        <li><a href="{{ home_url }}#enquire" class="hover:text-white">Get a free quote</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <p class="mx-auto max-w-7xl px-4 py-6 text-xs leading-relaxed text-slate-400 sm:px-6 lg:px-8">
+      {{ SITE_NAME }} is a medical travel facilitator, not a hospital or healthcare provider. Information on this site is not medical advice.
+      Costs are indicative and depend on each patient's condition and the hospital's assessment.
+    </p>
+  </div>
+</footer>

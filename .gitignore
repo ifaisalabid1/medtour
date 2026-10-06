@@ -227,3 +227,7 @@ __marimo__/
 staticfiles/
 media/
 private_media/
+
+medtour-website.html
+
+static/css/

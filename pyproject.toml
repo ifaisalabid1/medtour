@@ -5,6 +5,7 @@ requires-python = ">=3.14"
 dependencies = [
     "django-anymail[amazon-ses]>=15.2",
     "django-axes>=8.3.1",
+    "django-cotton>=2.7.2",
     "django-countries>=9.1.0",
     "django-environ>=0.14.0",
     "django-health-check>=4.8.0",
@@ -12,6 +13,7 @@ dependencies = [
     "django-prose-editor[sanitize]>=0.27.3",
     "django-simple-history>=3.13.0",
     "django-storages[s3]>=1.14.6",
+    "django-tailwind-cli>=4.8.1",
     "django-tasks-db>=0.13.0",
     "django-unfold>=0.108.0",
     "django[argon2]>=6.1.1",

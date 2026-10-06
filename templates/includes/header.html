@@ -1,0 +1,38 @@
+{% url 'website:home' as home_url %}
+<header class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur" x-data="mobileMenu">
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
+    <a href="{{ home_url }}" class="flex items-center gap-2 text-lg font-extrabold tracking-tight">
+      <span class="grid size-9 place-items-center rounded-xl bg-brand-600 text-white"><c-icon name="plus" class="size-5" /></span>
+      {{ SITE_NAME }}
+    </a>
+
+    <nav aria-label="Main" class="hidden items-center gap-7 text-sm font-medium text-slate-700 lg:flex">
+      <a href="{{ home_url }}#treatments" class="hover:text-brand-700">Treatments</a>
+      <a href="{{ home_url }}#hospitals" class="hover:text-brand-700">Hospitals</a>
+      <a href="{{ home_url }}#doctors" class="hover:text-brand-700">Doctors</a>
+      <a href="{{ home_url }}#how-it-works" class="hover:text-brand-700">How it works</a>
+      <a href="{{ home_url }}#guides" class="hover:text-brand-700">Patient guides</a>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a href="tel:{{ CONTACT_PHONE|cut:' ' }}" class="hidden items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold hover:border-brand-600 md:inline-flex">
+        <c-icon name="phone" class="size-4" /> {{ CONTACT_PHONE }}
+      </a>
+      <c-button href="{{ home_url }}#enquire" size="md">Get free quote</c-button>
+      <button type="button" class="grid size-10 place-items-center rounded-full border border-slate-300 lg:hidden"
+              @click="toggle" :aria-expanded="open" aria-controls="mobile-menu">
+        <span class="sr-only">Menu</span>
+        <c-icon name="menu" class="size-5" x-show="closed" />
+        <c-icon name="x" class="size-5" x-show="open" x-cloak />
+      </button>
+    </div>
+  </div>
+
+  <nav id="mobile-menu" aria-label="Main" class="border-t border-slate-200 bg-white px-4 pb-6 pt-2 lg:hidden" x-show="open" x-cloak @click="close">
+    <a href="{{ home_url }}#treatments" class="block border-b border-slate-100 py-3 font-medium">Treatments</a>
+    <a href="{{ home_url }}#hospitals" class="block border-b border-slate-100 py-3 font-medium">Hospitals</a>
+    <a href="{{ home_url }}#doctors" class="block border-b border-slate-100 py-3 font-medium">Doctors</a>
+    <a href="{{ home_url }}#how-it-works" class="block border-b border-slate-100 py-3 font-medium">How it works</a>
+    <a href="{{ home_url }}#guides" class="block py-3 font-medium">Patient guides</a>
+  </nav>
+</header>

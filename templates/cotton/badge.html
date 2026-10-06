@@ -1,0 +1,9 @@
+{% comment %}
+  Small label. variant="verified" for accreditation and registration badges.
+  Usage: <c-badge variant="verified">NABH</c-badge>
+{% endcomment %}
+<c-vars variant="neutral" />
+<span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold
+  {% if variant == 'verified' %}bg-emerald-50 text-emerald-800{% elif variant == 'brand' %}bg-brand-50 text-brand-800{% else %}bg-slate-100 text-slate-700{% endif %}">
+  {% if variant == "verified" %}<c-icon name="check" class="size-3" />{% endif %}{{ slot }}
+</span>

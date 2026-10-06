@@ -50,6 +50,8 @@ THIRD_PARTY_APPS = [
     "django_tasks_db",
     "axes",
     "health_check",
+    "django_cotton",
+    "django_tailwind_cli",
 ]
 LOCAL_APPS = [
     "apps.core",
@@ -222,6 +224,11 @@ SITE_NAME = env.str("SITE_NAME", default="Medtour")
 # (no trailing slash).
 SITE_URL = env.str("SITE_URL", default="http://127.0.0.1:8000")
 
+# Shown in the header, footer and WhatsApp links.
+CONTACT_PHONE = env.str("CONTACT_PHONE", default="+91 00000 00000")
+WHATSAPP_NUMBER = env.str("WHATSAPP_NUMBER", default="910000000000")  # digits only
+CONTACT_EMAIL = env.str("CONTACT_EMAIL", default="care@localhost")
+
 # Staff inboxes alerted about every new enquiry.
 ENQUIRY_ALERT_EMAILS: list[str] = env.list("ENQUIRY_ALERT_EMAILS", default=[])
 
@@ -266,6 +273,14 @@ ADMIN_CSP = {
     "script-src": [CSP.SELF, CSP.UNSAFE_INLINE, CSP.UNSAFE_EVAL],
     "style-src": [CSP.SELF, CSP.UNSAFE_INLINE],
 }
+
+# --- Front end (Tailwind CSS) -------------------------------------------------
+
+# The Tailwind CLI turns frontend/tailwind.css into static/css/site.css.
+# Pinned so every machine and the server build identical CSS.
+TAILWIND_CLI_VERSION = "4.3.3"
+TAILWIND_CLI_SRC_CSS = "frontend/tailwind.css"
+TAILWIND_CLI_DIST_CSS = "css/site.css"
 
 
 # --- Logging -----------------------------------------------------------------

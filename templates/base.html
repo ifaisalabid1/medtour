@@ -1,4 +1,4 @@
-{% load json_ld %}<!doctype html>
+{% load static json_ld tailwind_cli %}<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -8,11 +8,26 @@
     {% if noindex %}<meta name="robots" content="noindex, follow">{% endif %}
     {# One canonical address per page: no tracking parameters, no old slugs. #}
     <link rel="canonical" href="{{ SITE_URL }}{{ request.path }}">
+    <meta name="theme-color" content="#0b5ed7">
+    <link rel="preload" href="{% static 'fonts/plus-jakarta-sans-latin-wght-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+    {% tailwind_css %}
+    {# Loading indicators are styled in tailwind.css, so htmx needn't inject its own CSS. #}
+    <meta name="htmx-config" content='{"includeIndicatorCSS": false}'>
+    <script src="{% static 'vendor/htmx-4.0.0.min.js' %}" defer></script>
+    {# app.js must load before Alpine so its components exist when Alpine starts. #}
+    <script src="{% static 'js/app.js' %}" defer></script>
+    <script src="{% static 'vendor/alpine-csp-3.17.4.min.js' %}" defer></script>
     {% for data in structured_data %}{% json_ld data %}{% endfor %}
   </head>
-  <body>
-    <main>
+  <body class="flex min-h-screen flex-col pb-20 md:pb-0">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-brand-600 focus:px-4 focus:py-2 focus:font-semibold focus:text-white">Skip to content</a>
+    {% include "includes/header.html" %}
+
+    <main id="main" class="flex-1">
       {% block content %}{% endblock %}
     </main>
+
+    {% include "includes/footer.html" %}
+    {% include "includes/mobile_contact_bar.html" %}
   </body>
 </html>
