@@ -51,3 +51,17 @@ export type ConsentPurpose = (typeof CONSENT_PURPOSES)[number];
 
 export const DOCUMENT_KINDS = ["medical_report", "prescription", "passport", "other"] as const;
 export type DocumentKind = (typeof DOCUMENT_KINDS)[number];
+
+/** The purposes a patient consents to, itemised as in the consent notice. */
+export function consentPurposesFor(countryCode: string): ConsentPurpose[] {
+  const purposes: ConsentPurpose[] = [
+    "case_evaluation",
+    "share_with_partner_hospitals",
+    "contact_whatsapp_email"
+  ];
+  if (countryCode !== "IN") purposes.push("cross_border_transfer");
+  return purposes;
+}
+
+/** Human-friendly lead reference used in emails and WhatsApp, e.g. "MT-1001". */
+export const formatLeadRef = (refNo: number) => `MT-${refNo}`;
