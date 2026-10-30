@@ -3,3 +3,4 @@ export * from "./taxonomy.js";
 export * from "./reviewers.js";
 export * from "./hospitals.js";
 export * from "./doctors.js";
+export * from "./procedures.js";

@@ -15,6 +15,13 @@
       "when": 1793367508340,
       "tag": "0001_hospitals_doctors",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793367943880,
+      "tag": "0002_procedures_tariffs",
+      "breakpoints": true
     }
   ]
 }
