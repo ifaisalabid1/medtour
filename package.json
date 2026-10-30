@@ -43,6 +43,7 @@
     "prettier": "^3.9.10",
     "prettier-plugin-svelte": "^4.1.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "rate-limiter-flexible": "^11.2.3",
     "shadcn-svelte": "^1.7.2",
     "svelte": "^5.57.3",
     "svelte-check": "^4.7.7",

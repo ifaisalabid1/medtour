@@ -4,7 +4,7 @@ import { createAuthMiddleware } from "better-auth/api";
 import { admin, emailOTP } from "better-auth/plugins";
 import { sveltekitCookies } from "better-auth/svelte-kit";
 import { getRequestEvent } from "$app/server";
-import { BETTER_AUTH_SECRET, BETTER_AUTH_URL } from "$app/env/private";
+import { BETTER_AUTH_SECRET, SITE_URL } from "$app/env/private";
 import { currentRequestMeta, recordAudit } from "./audit.js";
 import { db } from "./db/index.js";
 import { accounts, rateLimits, sessions, users, verifications } from "./db/schema/index.js";
@@ -17,7 +17,7 @@ const HOUR = 60 * MINUTE;
 
 export const auth = betterAuth({
   appName: "Medtour",
-  baseURL: BETTER_AUTH_URL,
+  baseURL: SITE_URL,
   secret: BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, {
     provider: "pg",
