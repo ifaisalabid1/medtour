@@ -9,6 +9,15 @@ export const variables = defineEnvVars({
     description: "PostgreSQL connection string.",
     schema: z.url({ protocol: /^postgres(ql)?$/ })
   },
+  BETTER_AUTH_SECRET: {
+    description: "Signs session cookies. Generate with: openssl rand -base64 32",
+    schema: z.string().min(32)
+  },
+  BETTER_AUTH_URL: {
+    description:
+      "Public origin of the app, e.g. https://medtour.example (http://localhost:5173 in dev).",
+    schema: z.url()
+  },
   LOG_LEVEL: {
     description: "pino log level.",
     schema: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info")
