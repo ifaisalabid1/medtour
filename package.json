@@ -56,7 +56,8 @@
   },
   "imports": {
     "#lib": "./src/lib/index.js",
-    "#lib/*": "./src/lib/*"
+    "#lib/*": "./src/lib/*",
+    "#test/*": "./test/*"
   },
   "dependencies": {
     "@aws-sdk/client-sesv2": "^3.1160.0",
