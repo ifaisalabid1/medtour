@@ -1,9 +1,11 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { createAuthMiddleware } from "better-auth/api";
 import { admin, emailOTP } from "better-auth/plugins";
 import { sveltekitCookies } from "better-auth/svelte-kit";
 import { getRequestEvent } from "$app/server";
 import { BETTER_AUTH_SECRET, BETTER_AUTH_URL } from "$app/env/private";
+import { recordAudit, requestMeta } from "./audit.js";
 import { db } from "./db/index.js";
 import { accounts, rateLimits, sessions, users, verifications } from "./db/schema/index.js";
 import { sendEmail } from "./email/index.js";
@@ -34,6 +36,44 @@ export const auth = betterAuth({
   session: {
     expiresIn: 12 * HOUR,
     updateAge: 1 * HOUR
+  },
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      if (ctx.path !== "/sign-in/email-otp") return;
+      const signedIn = ctx.context.newSession;
+      await recordAudit({
+        actorType: "staff",
+        actorId: signedIn?.user.id ?? null,
+        action: signedIn ? "auth.sign_in" : "auth.sign_in_failed",
+        entityType: "user",
+        entityId: signedIn?.user.id,
+        // For failures, keep the attempted address so repeated attacks can be traced
+        metadata: signedIn
+          ? {}
+          : {
+              attemptedEmail: String(ctx.body?.email ?? "")
+                .toLowerCase()
+                .slice(0, 254)
+            },
+        ...requestMeta(getRequestEvent())
+      });
+    })
+  },
+  databaseHooks: {
+    session: {
+      delete: {
+        after: async (session, ctx) => {
+          await recordAudit({
+            actorType: "staff",
+            actorId: session.userId,
+            action: ctx?.path === "/sign-out" ? "auth.sign_out" : "auth.session_revoked",
+            entityType: "user",
+            entityId: session.userId,
+            ...requestMeta(getRequestEvent())
+          });
+        }
+      }
+    }
   },
   rateLimit: {
     enabled: true,
