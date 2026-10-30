@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { DATABASE_URL } from "$app/env/private";
-import * as schema from "./schema";
+import * as schema from "./schema/index.js";
 
 const client = postgres(DATABASE_URL, {
   max: 10,
