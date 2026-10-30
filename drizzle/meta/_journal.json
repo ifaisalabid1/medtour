@@ -22,6 +22,20 @@
       "when": 1793367943880,
       "tag": "0002_procedures_tariffs",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793368347946,
+      "tag": "0003_leads_consent_audit",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793368365149,
+      "tag": "0004_audit_logs_append_only",
+      "breakpoints": true
     }
   ]
 }
