@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { sql, type SQL } from "drizzle-orm";
 import {
   check,
   date,
@@ -12,7 +12,7 @@ import {
   uuid
 } from "drizzle-orm/pg-core";
 import type { ProcedureFaq, ProcedureLogistics } from "#lib/domain/procedures.js";
-import { id, seo, slug, slugFormat, timestamps } from "./columns.js";
+import { id, seo, slug, slugFormat, timestamps, tsvector } from "./columns.js";
 import { doctors } from "./doctors.js";
 import { publishStatus, roomCategory } from "./enums.js";
 import { hospitals } from "./hospitals.js";
@@ -40,6 +40,10 @@ export const procedures = pgTable(
     body: text(), // long-form guide, sanitised HTML (added with the editor later)
     reviewerId: uuid().references(() => medicalReviewers.id, { onDelete: "restrict" }),
     lastReviewedOn: date(),
+    search: tsvector().generatedAlwaysAs(
+      (): SQL =>
+        sql`setweight(to_tsvector('english', ${procedures.name} || ' ' || immutable_array_to_string(${procedures.alsoKnownAs})), 'A') || setweight(to_tsvector('english', coalesce(${procedures.summary}, '') || ' ' || coalesce(${procedures.procedureType}, '')), 'B')`
+    ),
     status: publishStatus().notNull().default("draft"),
     ...seo,
     ...timestamps
@@ -52,7 +56,9 @@ export const procedures = pgTable(
       sql`(${t.reviewerId} is null) = (${t.lastReviewedOn} is null)`
     ),
     index().on(t.specialtyId),
-    index().on(t.reviewerId)
+    index().on(t.reviewerId),
+    index().using("gin", t.search),
+    index("procedures_name_trgm_index").using("gin", t.name.op("gin_trgm_ops"))
   ]
 );
 

@@ -1,0 +1,9 @@
+ALTER TABLE "doctors" ADD COLUMN "search" "tsvector" GENERATED ALWAYS AS (setweight(to_tsvector('english', "doctors"."full_name"), 'A') || setweight(to_tsvector('english', immutable_array_to_string("doctors"."clinical_focus")), 'B') || setweight(to_tsvector('english', coalesce("doctors"."designation", '') || ' ' || coalesce("doctors"."bio", '')), 'C')) STORED;--> statement-breakpoint
+ALTER TABLE "hospitals" ADD COLUMN "search" "tsvector" GENERATED ALWAYS AS (setweight(to_tsvector('english', "hospitals"."name"), 'A') || setweight(to_tsvector('english', immutable_array_to_string("hospitals"."technologies")), 'B') || setweight(to_tsvector('english', coalesce("hospitals"."address", '') || ' ' || coalesce("hospitals"."overview", '')), 'C')) STORED;--> statement-breakpoint
+ALTER TABLE "procedures" ADD COLUMN "search" "tsvector" GENERATED ALWAYS AS (setweight(to_tsvector('english', "procedures"."name" || ' ' || immutable_array_to_string("procedures"."also_known_as")), 'A') || setweight(to_tsvector('english', coalesce("procedures"."summary", '') || ' ' || coalesce("procedures"."procedure_type", '')), 'B')) STORED;--> statement-breakpoint
+CREATE INDEX "doctors_search_index" ON "doctors" USING gin ("search");--> statement-breakpoint
+CREATE INDEX "doctors_full_name_trgm_index" ON "doctors" USING gin ("full_name" gin_trgm_ops);--> statement-breakpoint
+CREATE INDEX "hospitals_search_index" ON "hospitals" USING gin ("search");--> statement-breakpoint
+CREATE INDEX "hospitals_name_trgm_index" ON "hospitals" USING gin ("name" gin_trgm_ops);--> statement-breakpoint
+CREATE INDEX "procedures_search_index" ON "procedures" USING gin ("search");--> statement-breakpoint
+CREATE INDEX "procedures_name_trgm_index" ON "procedures" USING gin ("name" gin_trgm_ops);

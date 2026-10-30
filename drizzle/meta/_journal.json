@@ -50,6 +50,20 @@
       "when": 1793386561181,
       "tag": "0006_directory_images",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793387611974,
+      "tag": "0007_search_setup",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793388000341,
+      "tag": "0008_search_columns",
+      "breakpoints": true
     }
   ]
 }

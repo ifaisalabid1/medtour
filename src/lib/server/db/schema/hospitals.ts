@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { sql, type SQL } from "drizzle-orm";
 import {
   char,
   check,
@@ -14,7 +14,7 @@ import {
   uuid
 } from "drizzle-orm/pg-core";
 import type { HospitalAmenities } from "#lib/domain/hospitals.js";
-import { id, seo, slug, slugFormat, timestamps } from "./columns.js";
+import { id, seo, slug, slugFormat, timestamps, tsvector } from "./columns.js";
 import { accreditation, facilityType, mouStatus, publishStatus } from "./enums.js";
 import { cities, specialties } from "./taxonomy.js";
 
@@ -44,6 +44,10 @@ export const hospitals = pgTable(
     amenities: jsonb().$type<HospitalAmenities>().notNull().default({}),
     logoKey: text(), // media bucket object key
     coverImageKey: text(),
+    search: tsvector().generatedAlwaysAs(
+      (): SQL =>
+        sql`setweight(to_tsvector('english', ${hospitals.name}), 'A') || setweight(to_tsvector('english', immutable_array_to_string(${hospitals.technologies})), 'B') || setweight(to_tsvector('english', coalesce(${hospitals.address}, '') || ' ' || coalesce(${hospitals.overview}, '')), 'C')`
+    ),
     status: publishStatus().notNull().default("draft"),
     ...seo,
     ...timestamps
@@ -60,7 +64,9 @@ export const hospitals = pgTable(
       "hospitals_coordinates_range",
       sql`${t.latitude} between -90 and 90 and ${t.longitude} between -180 and 180`
     ),
-    index().on(t.cityId)
+    index().on(t.cityId),
+    index().using("gin", t.search),
+    index("hospitals_name_trgm_index").using("gin", t.name.op("gin_trgm_ops"))
   ]
 );
 

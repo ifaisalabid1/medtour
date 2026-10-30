@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { sql, type SQL } from "drizzle-orm";
 import {
   boolean,
   check,
@@ -14,7 +14,7 @@ import {
   uuid
 } from "drizzle-orm/pg-core";
 import type { AwardEntry, EducationEntry, OpdSlot, WorkEntry } from "#lib/domain/doctors.js";
-import { id, seo, slug, slugFormat, timestamps } from "./columns.js";
+import { id, seo, slug, slugFormat, timestamps, tsvector } from "./columns.js";
 import { publishStatus } from "./enums.js";
 import { hospitals } from "./hospitals.js";
 import { specialties } from "./taxonomy.js";
@@ -41,6 +41,10 @@ export const doctors = pgTable(
     awards: jsonb().$type<AwardEntry[]>().notNull().default([]),
     workHistory: jsonb().$type<WorkEntry[]>().notNull().default([]),
     photoKey: text(), // media bucket object key; NMC: a real, unretouched photo
+    search: tsvector().generatedAlwaysAs(
+      (): SQL =>
+        sql`setweight(to_tsvector('english', ${doctors.fullName}), 'A') || setweight(to_tsvector('english', immutable_array_to_string(${doctors.clinicalFocus})), 'B') || setweight(to_tsvector('english', coalesce(${doctors.designation}, '') || ' ' || coalesce(${doctors.bio}, '')), 'C')`
+    ),
     status: publishStatus().notNull().default("draft"),
     ...seo,
     ...timestamps
@@ -53,7 +57,9 @@ export const doctors = pgTable(
       "doctors_published_requires_verified_registration",
       sql`${t.status} <> 'published' or (${t.registrationNumber} is not null and ${t.medicalCouncil} is not null and ${t.registrationVerifiedAt} is not null)`
     ),
-    index().on(t.primarySpecialtyId)
+    index().on(t.primarySpecialtyId),
+    index().using("gin", t.search),
+    index("doctors_full_name_trgm_index").using("gin", t.fullName.op("gin_trgm_ops"))
   ]
 );
 
