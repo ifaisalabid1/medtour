@@ -2,7 +2,7 @@ import { enhancedImages } from "@sveltejs/enhanced-img";
 import tailwindcss from "@tailwindcss/vite";
 import adapter from "@sveltejs/adapter-bun";
 import { sveltekit } from "@sveltejs/kit/vite";
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [
@@ -20,5 +20,19 @@ export default defineConfig({
       // See https://svelte.dev/docs/kit/adapters for more information about adapters.
       adapter: adapter()
     })
-  ]
+  ],
+  test: {
+    expect: { requireAssertions: true },
+    projects: [
+      {
+        extends: "./vite.config.ts",
+        test: {
+          name: "server",
+          environment: "node",
+          include: ["src/**/*.test.ts"],
+          globalSetup: ["./test/global-setup.ts"]
+        }
+      }
+    ]
+  }
 });
