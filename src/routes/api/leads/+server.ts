@@ -1,6 +1,8 @@
 import * as z from "zod";
 import { dev } from "$app/env";
-import { SITE_URL, TURNSTILE_SECRET_KEY } from "$app/env/private";
+import { SITE_URL, TURNSTILE_SECRET_KEY, UPLOAD_GRANT_SECRET } from "$app/env/private";
+import { isJsonRequest, jsonReply as reply } from "#lib/server/http.js";
+import { createUploadGrant } from "#lib/server/leads/upload-grant.js";
 import { leadFormSchema } from "#lib/domain/lead-form.js";
 import { formatLeadRef } from "#lib/domain/leads.js";
 import { requestMeta } from "#lib/server/audit.js";
@@ -11,17 +13,13 @@ import { consumeOrRetryAfter, leadSubmissionLimiter } from "#lib/server/rate-lim
 import { verifyTurnstile } from "#lib/server/turnstile.js";
 import type { RequestHandler } from "./$types";
 
-const noStore = { "cache-control": "no-store" };
-const reply = (status: number, body: unknown, headers: Record<string, string> = {}) =>
-  Response.json(body, { status, headers: { ...noStore, ...headers } });
-
 /**
  * POST /api/leads — the enquiry form.
- * 201 { ref }  ·  400 { error: "invalid", fields }  ·  403 verification  ·  415  ·  429
+ * { ref, uploadGrant }  ·  400 { error: "invalid", fields }  ·  403 verification  ·  415  ·  429
  */
 export const POST: RequestHandler = async (event) => {
   // JSON only: browsers can't send it cross-site without a CORS preflight, which we never allow
-  if (!event.request.headers.get("content-type")?.startsWith("application/json")) {
+  if (!isJsonRequest(event.request)) {
     return reply(415, { error: "unsupported_media_type" });
   }
 
@@ -58,5 +56,9 @@ export const POST: RequestHandler = async (event) => {
   const lead = await createLead(parsed.data, meta);
   await notifyLeadCreated(lead, parsed.data);
 
-  return reply(201, { ref: formatLeadRef(lead.refNo) });
+  return reply(201, {
+    ref: formatLeadRef(lead.refNo),
+    // Lets this browser attach medical reports to this lead for the next 2 hours
+    uploadGrant: createUploadGrant(lead.id, UPLOAD_GRANT_SECRET)
+  });
 };

@@ -40,6 +40,20 @@ export const variables = defineEnvVars({
     description: "Team inbox notified of every new enquiry.",
     schema: z.email()
   },
+  R2_ENDPOINT: {
+    description: "Cloudflare R2 S3 endpoint: https://<account-id>.r2.cloudflarestorage.com",
+    schema: z.url()
+  },
+  R2_ACCESS_KEY_ID: { description: "R2 API token access key ID.", schema: z.string().min(1) },
+  R2_SECRET_ACCESS_KEY: { description: "R2 API token secret.", schema: z.string().min(1) },
+  R2_PRIVATE_BUCKET: {
+    description: "Private bucket for patient documents (no public access).",
+    schema: z.string().min(1)
+  },
+  UPLOAD_GRANT_SECRET: {
+    description: "Signs patient upload grants. Generate with: openssl rand -base64 32",
+    schema: z.string().min(32)
+  },
   TURNSTILE_SECRET_KEY: {
     description:
       "Cloudflare Turnstile secret. Dev: 1x0000000000000000000000000000000AA (always passes).",
