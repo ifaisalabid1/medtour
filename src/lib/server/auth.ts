@@ -5,7 +5,7 @@ import { admin, emailOTP } from "better-auth/plugins";
 import { sveltekitCookies } from "better-auth/svelte-kit";
 import { getRequestEvent } from "$app/server";
 import { BETTER_AUTH_SECRET, BETTER_AUTH_URL } from "$app/env/private";
-import { recordAudit, requestMeta } from "./audit.js";
+import { currentRequestMeta, recordAudit } from "./audit.js";
 import { db } from "./db/index.js";
 import { accounts, rateLimits, sessions, users, verifications } from "./db/schema/index.js";
 import { sendEmail } from "./email/index.js";
@@ -55,7 +55,7 @@ export const auth = betterAuth({
                 .toLowerCase()
                 .slice(0, 254)
             },
-        ...requestMeta(getRequestEvent())
+        ...currentRequestMeta()
       });
     })
   },
@@ -63,14 +63,33 @@ export const auth = betterAuth({
     session: {
       delete: {
         after: async (session, ctx) => {
-          await recordAudit({
-            actorType: "staff",
-            actorId: session.userId,
-            action: ctx?.path === "/sign-out" ? "auth.sign_out" : "auth.session_revoked",
+          const base = {
             entityType: "user",
             entityId: session.userId,
-            ...requestMeta(getRequestEvent())
-          });
+            metadata: { via: ctx?.path ?? "internal" },
+            ...currentRequestMeta()
+          };
+
+          if (ctx?.path === "/sign-out") {
+            await recordAudit({
+              ...base,
+              actorType: "staff",
+              actorId: session.userId,
+              action: "auth.sign_out"
+            });
+          } else if (session.expiresAt <= new Date()) {
+            await recordAudit({ ...base, actorType: "system", action: "auth.session_expired" });
+          } else {
+            // Revoked by someone else, e.g. an admin: record who made the request,
+            // not the session's owner (who is the subject, in entityId)
+            const actorId = ctx?.context.session?.user.id ?? null;
+            await recordAudit({
+              ...base,
+              actorType: actorId ? "staff" : "system",
+              actorId,
+              action: "auth.session_revoked"
+            });
+          }
         }
       }
     }

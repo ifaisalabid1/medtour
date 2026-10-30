@@ -1,5 +1,6 @@
 import { isIP } from "node:net";
 import type { RequestEvent } from "@sveltejs/kit";
+import { getRequestEvent } from "$app/server";
 import type { ActorType } from "#lib/domain/audit.js";
 import { db } from "./db/index.js";
 import { auditLogs } from "./db/schema/index.js";
@@ -11,6 +12,7 @@ export type AuditAction =
   | "auth.sign_in_failed"
   | "auth.sign_out"
   | "auth.session_revoked"
+  | "auth.session_expired"
   | "lead.created"
   | "lead.viewed"
   | "lead.updated"
@@ -58,4 +60,13 @@ export function requestMeta(event: RequestEvent): Pick<AuditEntry, "ipAddress" |
     ipAddress: ip && isIP(ip) ? ip : null, // the column is `inet`: never let a bad value fail the insert
     userAgent: event.request.headers.get("user-agent")
   };
+}
+
+/** Like `requestMeta`, for code that may run outside a request (cleanup jobs, scripts). */
+export function currentRequestMeta(): Pick<AuditEntry, "ipAddress" | "userAgent"> {
+  try {
+    return requestMeta(getRequestEvent());
+  } catch {
+    return {}; // not inside a request
+  }
 }
