@@ -15,10 +15,9 @@ import type { RequestHandler } from "./$types";
 
 /**
  * POST /api/leads — the enquiry form.
- * { ref, uploadGrant }  ·  400 { error: "invalid", fields }  ·  403 verification  ·  415  ·  429
+ * 201 { ref, uploadGrant }  ·  400 { error: "invalid", fields }  ·  403 verification  ·  415  ·  429
  */
 export const POST: RequestHandler = async (event) => {
-  // JSON only: browsers can't send it cross-site without a CORS preflight, which we never allow
   if (!isJsonRequest(event.request)) {
     return reply(415, { error: "unsupported_media_type" });
   }
