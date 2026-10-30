@@ -8,6 +8,13 @@
       "when": 1793367119844,
       "tag": "0000_directory_taxonomy",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793367508340,
+      "tag": "0001_hospitals_doctors",
+      "breakpoints": true
     }
   ]
 }
