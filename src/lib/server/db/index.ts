@@ -1,10 +1,15 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import * as schema from "./schema";
 import { DATABASE_URL } from "$app/env/private";
+import * as schema from "./schema";
 
-if (!DATABASE_URL) throw new Error("DATABASE_URL is not set");
+const client = postgres(DATABASE_URL, {
+  max: 10,
+  idle_timeout: 20,
+  connect_timeout: 10
+});
 
-const client = postgres(DATABASE_URL);
+export const db = drizzle(client, { schema, casing: "snake_case" });
 
-export const db = drizzle(client, { schema });
+// adapter-bun emits this after in-flight requests finish on SIGINT/SIGTERM
+process.on("sveltekit:shutdown", () => client.end({ timeout: 5 }));
