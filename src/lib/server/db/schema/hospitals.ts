@@ -42,6 +42,8 @@ export const hospitals = pgTable(
     overview: text(),
     technologies: text().array().notNull().default([]), // e.g. ["Da Vinci Xi", "CyberKnife"]
     amenities: jsonb().$type<HospitalAmenities>().notNull().default({}),
+    logoKey: text(), // media bucket object key
+    coverImageKey: text(),
     status: publishStatus().notNull().default("draft"),
     ...seo,
     ...timestamps

@@ -40,6 +40,7 @@ export const doctors = pgTable(
     education: jsonb().$type<EducationEntry[]>().notNull().default([]),
     awards: jsonb().$type<AwardEntry[]>().notNull().default([]),
     workHistory: jsonb().$type<WorkEntry[]>().notNull().default([]),
+    photoKey: text(), // media bucket object key; NMC: a real, unretouched photo
     status: publishStatus().notNull().default("draft"),
     ...seo,
     ...timestamps

@@ -24,6 +24,7 @@ const cardColumns = {
   practiceSince: doctors.practiceSince,
   registrationNumber: doctors.registrationNumber,
   medicalCouncil: doctors.medicalCouncil,
+  photoKey: doctors.photoKey,
   specialty: { slug: specialties.slug, name: specialties.name }
 };
 

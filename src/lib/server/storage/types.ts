@@ -13,5 +13,7 @@ export interface ObjectStore {
   stat(key: string): Promise<StoredObject | null>;
   /** The first `length` bytes, for checking the real file type. */
   readStart(key: string, length: number): Promise<Uint8Array>;
+  /** Writes an object from the server (used for processed public images). */
+  put(key: string, bytes: Uint8Array, type: string): Promise<void>;
   delete(key: string): Promise<void>;
 }

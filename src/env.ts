@@ -50,6 +50,15 @@ export const variables = defineEnvVars({
     description: "Private bucket for patient documents (no public access).",
     schema: z.string().min(1)
   },
+  R2_PUBLIC_BUCKET: {
+    description: "Public bucket for hospital and doctor photos, served from PUBLIC_MEDIA_URL.",
+    schema: z.string().min(1)
+  },
+  PUBLIC_MEDIA_URL: {
+    description: "Public base URL of the media bucket, e.g. https://media.medtour.example/",
+    public: true,
+    schema: z.url().refine((url) => url.endsWith("/"), "Must end with a slash")
+  },
   UPLOAD_GRANT_SECRET: {
     description: "Signs patient upload grants. Generate with: openssl rand -base64 32",
     schema: z.string().min(32)

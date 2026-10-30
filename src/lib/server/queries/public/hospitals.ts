@@ -26,6 +26,8 @@ const cardColumns = {
   establishedYear: hospitals.establishedYear,
   bedCount: hospitals.bedCount,
   airportDistanceKm: hospitals.airportDistanceKm,
+  logoKey: hospitals.logoKey,
+  coverImageKey: hospitals.coverImageKey,
   city: { slug: cities.slug, name: cities.name }
 };
 

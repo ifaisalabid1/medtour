@@ -16,6 +16,9 @@ export function createMemoryStore() {
     async readStart(key, length) {
       return objects.get(key)?.bytes.slice(0, length) ?? new Uint8Array();
     },
+    async put(key, bytes, type) {
+      objects.set(key, { bytes, type });
+    },
     async delete(key) {
       objects.delete(key);
     }

@@ -33,6 +33,10 @@ export function createR2Store(config: R2Config): ObjectStore {
       return new Uint8Array(await client.file(key).slice(0, length).arrayBuffer());
     },
 
+    async put(key, bytes, type) {
+      await client.write(key, bytes, { type });
+    },
+
     async delete(key) {
       await client.delete(key);
     }
